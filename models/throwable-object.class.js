@@ -29,13 +29,13 @@ offset = {
     right: 30,
 }
 
-    constructor(x){
+    constructor(x, y, img){
         super();
         this.loadImages(this.SPLASHING_BOTTLE_IMAGES);
         this.loadImages(this.ROTATING_BOTTLE_IMAGES);
-        this.loadImage('imgs/6_salsa_bottle/salsa_bottle.png');
+        this.loadImage(img);
         this.x = x;
-        this.y = 325;
+        this.y = y;
         this.width =  100;
         this.height = 100;
          

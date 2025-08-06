@@ -5,32 +5,49 @@ ctx;
 keyboard;
 camera_x;
 moveLeftAnimation;
+level;
 character = new Character("Pepe");
-level = level1;
 drawableObject = new DrawableObject();
 healthbar = new StatusBar('health', 10, 10);
-coinbar = new StatusBar('coin', 250, 10);
-bottlesbar = new StatusBar('bottle', 490, 10)
-enemyStatusbar = new StatusBar('endboss', 490, 50)
+coinbar = new StatusBar('coin', 220, 10);
+bottlesbar = new StatusBar('bottle', 430, 10)
+enemyStatusbar = new StatusBar('endboss', 430, 50)
 enemyStatusbarVisible = false;
 throwCooldown =  false;
+
+ jumpSound = new Audio('audio/jump.mp3');
+ bounceSound = new Audio('audio/swoop_bound.wav');
+ throwSound = new Audio('audio/throw.wav');
+ splashSound = new Audio('audio/splash_sound.mp3');
+ chickenHurtSound = new Audio('audio/chicken_hurt_sound_.wav');
+ chickenSound = new Audio('audio/chicken_normal_sound.wav');
+
 
 collectedBottles = [];
 collectedCoins = [];
 thrownObjects=[];
 
 
+
+
     constructor(canvas, keyboard){
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        initLevel()
+        this.level = level1;
         this.draw();
         this.setWorld();
         this.run();
         this.bottlesbar.setPercentage(this.collectedBottles.length * 10, this.bottlesbar.BOTTLE_IMAGES)
         this.coinbar.setPercentage(this.collectedCoins.length * 10, this.coinbar.COIN_IMAGES)
+        this.playIntroSound();
     }
 
+
+playIntroSound(){
+    this.chickenSound.play();
+}
 
 
 setWorld(){
@@ -62,7 +79,6 @@ run(){
                 if (enemy instanceof Endboss && !enemy.isDead()) {
                     if (!enemy.moveInterval) {
                         enemy.movingLeft(1.5);
-                        
                     }
                         enemy.checkIfDead();
                 }else if(enemy instanceof Endboss && enemy.isDead()){
@@ -70,11 +86,7 @@ run(){
                         clearInterval(enemy.moveInterval);
                         this.moveInterval = null;
                     }
-                        
-                }
-            }
-
-            );
+                }});
             this.enemyStatusbarVisible = true;
         }
     }
@@ -88,12 +100,16 @@ checkThrowObjects(){
         if (bottle.otherDirection) {
             bottle.throw(this.character.x - 100 + this.character.width / 2, this.character.y + this.character.height / 2)
             this.throwCooldown = true;
+            this.throwSound.play()
+            
         }else{
             bottle.throw(this.character.x + this.character.width / 2, this.character.y + this.character.height / 2)
             this.throwCooldown = true;
+            this.throwSound.play()
         }
         this.thrownObjects.push(bottle);
         this.bottlesbar.setPercentage(this.collectedBottles.length * 10, this.bottlesbar.BOTTLE_IMAGES)
+        this.character.lastMoveTime = Date.now();
         setTimeout(() => {
             this.throwCooldown = false;
         }, 1000)
@@ -116,6 +132,8 @@ jumpOnEnemy(){
         this.character.jump();
         enemy.hit(100)
         enemy.checkIfDead();
+        this.jumpSound.currentTime = 0
+        this.jumpSound.play();
         }
     });
 }
@@ -125,20 +143,29 @@ checkEnemyAttack(){
         this.thrownObjects.forEach((bottle) => {
             if (bottle.isColliding(enemy) && enemy instanceof Chicken && !enemy.isDead()) {
                 enemy.hit(100);
-                this.bottleSpash(bottle);
+                this.bottleSplash(bottle);
                 enemy.checkIfDead()
-
+                this.splashSound.currentTime = 0;
+                this.playAudio(this.splashSound)
+                this.playAudio(this.chickenHurtSound)
             }else if (bottle.isColliding(enemy) && enemy instanceof Endboss && !enemy.isDead() && !enemy.isHurt()){
                 enemy.hit(25);
-                this.bottleSpash(bottle);
+                this.bottleSplash(bottle);
                 this.enemyStatusbar.setPercentage(enemy.characterHealth, this.enemyStatusbar.ENDBOSS_STATUSBAR_IMAGES)
                 enemy.checkIfDead()
+                this.splashSound.currentTime = 0;
+                this.splashSound.play();
             }
         })
     })
 }
 
-bottleSpash(bottle){
+playAudio(audio){
+    audio.currentTime = 0;
+    audio.play();
+}
+
+bottleSplash(bottle){
     if (bottle.gravityInterval){
         clearInterval(bottle.gravityInterval);
         bottle.gravityInterval = null;
@@ -225,8 +252,8 @@ addToMap(object){
         this.flipImage(object)
     }
 
-    // this.drawFrameBorder(object);
-    // this.drawOffsetFrameBorder(object);
+     // this.drawFrameBorder(object);
+     // this.drawOffsetFrameBorder(object);
 
     this.ctx.drawImage(object.img, object.x, object.y, object.width, object.height);
         

@@ -9,6 +9,7 @@ class Character extends MovableObject {
     speed = 30;
     otherDirection = false;
     characterStatus;
+    lastMoveTime = Date.now();
 
     offset = {
         top : 130,
@@ -67,7 +68,20 @@ class Character extends MovableObject {
         'imgs/2_character_pepe/4_hurt/H-43.png'
     ]
 
+    IMAGES_LONG_IDLE = [
+        'imgs/2_character_pepe/1_idle/long_idle/I-11.png',
+        'imgs/2_character_pepe/1_idle/long_idle/I-12.png',
+        'imgs/2_character_pepe/1_idle/long_idle/I-13.png',
+        'imgs/2_character_pepe/1_idle/long_idle/I-14.png',
+        'imgs/2_character_pepe/1_idle/long_idle/I-15.png',
+        'imgs/2_character_pepe/1_idle/long_idle/I-16.png',
+        'imgs/2_character_pepe/1_idle/long_idle/I-17.png',
+        'imgs/2_character_pepe/1_idle/long_idle/I-18.png',
+        'imgs/2_character_pepe/1_idle/long_idle/I-19.png',
+        'imgs/2_character_pepe/1_idle/long_idle/I-20.png',
+    ]
 
+    
 
 
     constructor(name){
@@ -76,6 +90,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
+        this.loadImages(this.IMAGES_LONG_IDLE);
         this.loadImages(this.IMAGES_IDLE);
         this.name = name;
         this.animate();
@@ -92,20 +107,18 @@ class Character extends MovableObject {
             if (this.isDead() && !this.deathAnimationPlayed) {
                 this.playAnimationOnce(this.IMAGES_DEAD);
                 this.deathAnimationPlayed = true;
-                this.stopGameIntervals();
                 return;
             }
 
+            const idleTime = Date.now() - this.lastMoveTime;
             if (!this.isDead()) {
                 if (this.isHurt() ) {
                     this.playAnimation(this.IMAGES_HURT);
-                }
-                else{
+                }else if(idleTime > 5000){
+                    this.playAnimation(this.IMAGES_LONG_IDLE)
+                }else{
                     this.playAnimation(this.IMAGES_IDLE);
                 }
-                
-
-
             }
         }, 200);
 
@@ -132,17 +145,20 @@ class Character extends MovableObject {
         //WALK LEFT
             if (!this.isDead() && this.world.keyboard.LEFT && this.x > 0) {
                 this.moveLeft()
+                this.lastMoveTime = Date.now();
             }
                     
         //WALK RIGHT
             if (!this.isDead() && this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight()
+                this.lastMoveTime = Date.now();
             }
 
             this.world.camera_x  = -this.x + 80;
 
             if (!this.isDead() && !this.isAboveGround() && (this.world.keyboard.SPACE || this.world.keyboard.UP)) {
                 this.jump();
+                this.lastMoveTime = Date.now();
             }
         }, 50)
     }

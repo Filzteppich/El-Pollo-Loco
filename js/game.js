@@ -4,9 +4,54 @@ let keyboard = new Keyboard();
 
 function init(){
     canvas = document.getElementById('canvas');
-    world = new World(canvas, keyboard);
+    
 
     // console.log("My Name is:", world.character.name)    
+}
+
+
+function startGame(){
+    let world = new World(canvas, keyboard);
+    document.getElementById('startScreen').classList.add('hidden')
+    document.getElementById('canvas').classList.remove('hidden')
+    return world;
+}
+
+function showWindow(id){
+    document.getElementById(id).classList.remove('hidden');
+}
+
+function closeWindow(id){
+    document.getElementById(id).classList.add('hidden');
+}
+
+function toggleFullscreen(){
+    let fullscreen = document.getElementById('fullscreen')
+    if (!document.fullscreenElement){
+        openFullscreen(fullscreen);
+    }else{
+        closeFullscreen();
+    }
+}
+
+function openFullscreen(elem) {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) {
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { 
+    elem.msRequestFullscreen();
+  }
+}
+
+function closeFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) { /* Safari */
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { /* IE11 */
+    document.msExitFullscreen();
+  }
 }
 
 document.addEventListener('keydown', (event) => {

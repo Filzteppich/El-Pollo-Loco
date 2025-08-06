@@ -7,6 +7,9 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
     gravityInterval;
 
+
+   
+    
     clearIntervalAfterDeath = [];
     
     
@@ -75,6 +78,7 @@ class MovableObject extends DrawableObject {
         
         jump(){
             this.speedY = 25;
+            
         }
         
         
@@ -119,6 +123,7 @@ class MovableObject extends DrawableObject {
             this.moveInterval = setInterval(() => {
                 this.x -= speed;
             }, 1000 / 60)
+            let i = 0;
             this.clearIntervalAfterDeath.push(this.moveInterval);
             console.log(this.clearIntervalAfterDeath);
         }

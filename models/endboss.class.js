@@ -65,7 +65,7 @@ class Endboss extends MovableObject {
             this.playAnimation(this.IMAGES_HURT)
         }else{
         this.playAnimation(this.IMAGES_ATTACK)
-        }}, 300)
+        }}, 200)
     
 
     }
@@ -82,8 +82,7 @@ class Endboss extends MovableObject {
             this.img = this.imageCache[this.IMAGES_DEAD[i]];
             i++;
             if (i >= this.IMAGES_DEAD.length) {
-                clearInterval(interval);
-                clearInterval(this.moveInterval)
+                this.stopGameIntervals();
                 this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]]
                 setTimeout(() => {
                     this.applyGravity();
@@ -91,6 +90,8 @@ class Endboss extends MovableObject {
                 }, 700);
             }
             }, 200);
+            this.clearIntervalAfterDeath.push(interval);
+
         }
     }
 

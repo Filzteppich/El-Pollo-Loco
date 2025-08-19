@@ -6,7 +6,7 @@ keyboard;
 camera_x;
 moveLeftAnimation;
 level;
-character = new Character("Pepe");
+character = new Character("Pepe", this.jumpSound);
 drawableObject = new DrawableObject();
 healthbar = new StatusBar('health', 10, 10);
 coinbar = new StatusBar('coin', 220, 10);
@@ -15,12 +15,22 @@ enemyStatusbar = new StatusBar('endboss', 430, 50)
 enemyStatusbarVisible = false;
 throwCooldown =  false;
 
- jumpSound = new Audio('audio/jump.mp3');
+
+ 
  bounceSound = new Audio('audio/swoop_bound.wav');
  throwSound = new Audio('audio/throw.wav');
  splashSound = new Audio('audio/splash_sound.mp3');
  chickenHurtSound = new Audio('audio/chicken_hurt_sound_.wav');
- chickenSound = new Audio('audio/chicken_normal_sound.wav');
+ characterHurtSound = new Audio('audio/character_hurt.wav');
+ finalBossTheme = new Audio('audio/final_boss.wav');
+ coinSound = new Audio('audio/coin_sound.mp3');
+ bottleSound = new Audio('audio/bottle_collect.wav');
+ themeSong = new Audio('audio/theme_song.wav');
+ endbossSound = new Audio('audio/endboss_sound.wav');
+ endbossHurtSound = new Audio('audio/endboss_hurt.wav');
+
+
+
 
 
 collectedBottles = [];
@@ -34,6 +44,7 @@ thrownObjects=[];
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.setAudioVolume();
         initLevel()
         this.level = level1;
         this.draw();
@@ -42,11 +53,52 @@ thrownObjects=[];
         this.bottlesbar.setPercentage(this.collectedBottles.length * 10, this.bottlesbar.BOTTLE_IMAGES)
         this.coinbar.setPercentage(this.collectedCoins.length * 10, this.coinbar.COIN_IMAGES)
         this.playIntroSound();
+        this.collectSounds();
+        this.checkAudioBeforeStart();
+
     }
+
+    
+    
+    collectSounds(){
+    registerSounds(this.bounceSound);
+    registerSounds(this.throwSound);
+    registerSounds(this.splashSound);
+    registerSounds(this.chickenHurtSound);
+    registerSounds(this.characterHurtSound);
+    registerSounds(this.finalBossTheme);
+    registerSounds(this.coinSound);
+    registerSounds(this.bottleSound);
+    registerSounds(this.themeSong);
+    registerSounds(this.endbossSound);
+    registerSounds(this.endbossHurtSound);
+    registerSounds(this.character.jumpSound);
+    registerSounds(this.character.longIdleSound);
+    registerSounds(this.level.enemies.forEach((chicken) =>{
+        registerSounds(chicken.chickensound);
+    }))
+}
+
+checkAudioBeforeStart(){
+    if (mute){
+        allSounds.forEach((sound) => {
+            sound.volume = 0;
+        })
+    }
+}
+
+setAudioVolume(){
+    this.bounceSound.volume = 1.0;
+    this.finalBossTheme.volume = 0.3;
+    this.themeSong.volume = 0.2;
+    this.endbossSound.volume = 0.2;
+    this.endbossHurtSound.volume = 0.2;
+}
 
 
 playIntroSound(){
-    this.chickenSound.play();
+    this.themeSong.play();
+    this.themeSong.loop = true;
 }
 
 
@@ -58,15 +110,15 @@ run(){
     
     setInterval(() => {
         this.jumpOnEnemy();
+        this.EndbossAttack();
     }, 10);
     
     setInterval(() => {
         this.checkCollisions();
-        this.EndbossAttack();
+        this.checkEnemyAttack()
     }, 200);
     
     setInterval(() => {
-        this.checkEnemyAttack()
         this.checkBottleCollision()
         this.checkCoinCollision();
         this.checkThrowObjects();
@@ -79,12 +131,16 @@ run(){
                 if (enemy instanceof Endboss && !enemy.isDead()) {
                     if (!enemy.moveInterval) {
                         enemy.movingLeft(1.5);
+                        this.themeSong.pause();
+                        this.finalBossTheme.play();
+                        this.endbossSound.play();
+                        this.endbossSound.loop = true;
                     }
                         enemy.checkIfDead();
                 }else if(enemy instanceof Endboss && enemy.isDead()){
                     if (enemy.moveInterval) {
                         clearInterval(enemy.moveInterval);
-                        this.moveInterval = null;
+                        enemy.moveInterval = null;
                     }
                 }});
             this.enemyStatusbarVisible = true;
@@ -119,8 +175,9 @@ checkThrowObjects(){
 
 checkCollisions(){
     this.level.enemies.forEach((enemy) => {
-    if(this.character.isColliding(enemy) && !this.character.isDead() && !enemy.isDead()){
+    if(this.character.isColliding(enemy) && !this.character.isDead() && !this.character.isCollidingFromTop(enemy) && !enemy.isDead()){
         this.character.hit(5);
+        this.characterHurtSound.play();
         this.healthbar.setPercentage(this.character.characterHealth, this.healthbar.HEALTHBAR_IMAGES);
         }
     })
@@ -132,8 +189,8 @@ jumpOnEnemy(){
         this.character.jump();
         enemy.hit(100)
         enemy.checkIfDead();
-        this.jumpSound.currentTime = 0
-        this.jumpSound.play();
+        this.bounceSound.currentTime = 0
+        this.bounceSound.play();
         }
     });
 }
@@ -152,9 +209,11 @@ checkEnemyAttack(){
                 enemy.hit(25);
                 this.bottleSplash(bottle);
                 this.enemyStatusbar.setPercentage(enemy.characterHealth, this.enemyStatusbar.ENDBOSS_STATUSBAR_IMAGES)
-                enemy.checkIfDead()
+                enemy.checkIfDead(this.finalBossTheme, this.themeSong, this.endbossSound)
                 this.splashSound.currentTime = 0;
                 this.splashSound.play();
+                this.endbossHurtSound.currentTime = 0;
+                this.endbossHurtSound.play();
             }
         })
     })
@@ -194,6 +253,8 @@ checkBottleCollision(){
                 let removedBottle = this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1)[0];
                 this.collectedBottles.push(removedBottle);
                 this.bottlesbar.setPercentage(this.collectedBottles.length * 10, this.bottlesbar.BOTTLE_IMAGES)
+                this.bottleSound.currentTime = 0;
+                this.bottleSound.play();
             }
         })
 }
@@ -204,6 +265,8 @@ checkCoinCollision(){
             let removedCoin = this.level.coins.splice(this.level.coins.indexOf(coin), 1)[0];
             this.collectedCoins.push(removedCoin);
             this.coinbar.setPercentage(this.collectedCoins.length * 10, this.coinbar.COIN_IMAGES);
+            this.coinSound.currentTime = 0;
+            this.coinSound.play();
         }
     })
 }
@@ -216,6 +279,8 @@ draw() {
 
     this.ctx.translate(this.camera_x, 0);
     
+    
+
     this.addObjectsToMap(this.level.backgroundObject)
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);

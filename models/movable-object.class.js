@@ -6,6 +6,7 @@ class MovableObject extends DrawableObject {
     chickenHealth = 5;
     lastHit = 0;
     gravityInterval;
+    gameFinished = false;
 
 
    
@@ -34,7 +35,7 @@ class MovableObject extends DrawableObject {
     }
     
     
-    
+
     applyGravity(){
         this.gravityInterval = setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {

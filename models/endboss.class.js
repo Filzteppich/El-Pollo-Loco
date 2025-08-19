@@ -70,7 +70,7 @@ class Endboss extends MovableObject {
 
     }
 
-    checkIfDead(){
+    checkIfDead(enemyTheme, gameTheme, endbossSound){
         if (this.isDead()) {
             if (this.animateInterval) {
                 clearInterval(this.animateInterval)
@@ -84,14 +84,20 @@ class Endboss extends MovableObject {
             if (i >= this.IMAGES_DEAD.length) {
                 this.stopGameIntervals();
                 this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]]
-                setTimeout(() => {
+                setTimeout(() => {setTimeout(() => {
+                    enemyTheme.pause();
+                    gameTheme.currentTime = 0;
+                    gameTheme.play();
+                    endbossSound.pause();
+
+                }, 500);
                     this.applyGravity();
                     this.jump()
+                    this.gameFinished = true;
                 }, 700);
             }
             }, 200);
             this.clearIntervalAfterDeath.push(interval);
-
         }
     }
 

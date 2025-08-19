@@ -11,6 +11,9 @@ class Character extends MovableObject {
     characterStatus;
     lastMoveTime = Date.now();
 
+    jumpSound = new Audio('audio/jump_sound.mp3');
+    longIdleSound = new Audio('audio/snoring_sound.wav');
+
     offset = {
         top : 130,
         bottom : 15,
@@ -93,13 +96,16 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_LONG_IDLE);
         this.loadImages(this.IMAGES_IDLE);
         this.name = name;
+        this.setAudioVolume();
         this.animate();
         this.applyGravity();
         this.characterMovement();
-
     }
 
-
+    setAudioVolume(){
+        this.jumpSound.volume = 0.3;
+        this.longIdleSound.volume = 0.5;
+    }
 
     animate(){
         this.deathAnimationPlayed = false;
@@ -114,10 +120,13 @@ class Character extends MovableObject {
             if (!this.isDead()) {
                 if (this.isHurt() ) {
                     this.playAnimation(this.IMAGES_HURT);
+                    this.longIdleSound.pause()
                 }else if(idleTime > 5000){
                     this.playAnimation(this.IMAGES_LONG_IDLE)
+                    this.longIdleSound.play();
                 }else{
                     this.playAnimation(this.IMAGES_IDLE);
+                    this.longIdleSound.pause()
                 }
             }
         }, 200);
@@ -157,6 +166,8 @@ class Character extends MovableObject {
             this.world.camera_x  = -this.x + 80;
 
             if (!this.isDead() && !this.isAboveGround() && (this.world.keyboard.SPACE || this.world.keyboard.UP)) {
+                this.jumpSound.currentTime = 0;
+                this.jumpSound.play();
                 this.jump();
                 this.lastMoveTime = Date.now();
             }

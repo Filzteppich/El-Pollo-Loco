@@ -11,6 +11,7 @@
     <script src="./models/collectible-object.class.js"></script>
     <script src="./models/character.class.js"></script>
     <script src="./models/chicken.class.js"></script>
+    <script src="./models/small-chicken.class.js"></script>
     <script src="./models/floor.class.js"></script>
     <script src="./models/endboss.class.js"></script>
     <script src="./models/backgroundObjects.class.js"></script>
@@ -32,7 +33,7 @@
 
     <div class="settings_icon_container" >
         <img class="settings_icon" onclick="toggleFullscreen()" src="imgs/icons/fullscreen.png" alt="">
-        <img class="settings_icon" src="imgs/icons/volume.png" alt="">
+        <img class="settings_icon" id="soundIcon" onclick="toggleSound()" src="imgs/icons/volume.png" alt="">
     </div>
 
 <div id="startScreen" class="startScreen">

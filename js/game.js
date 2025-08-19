@@ -1,17 +1,19 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let mute = localStorage.getItem('mute') === 'true';
+let allSounds =[];
 
 function init(){
     canvas = document.getElementById('canvas');
-    
+    checkLocalStorageSound();
 
     // console.log("My Name is:", world.character.name)    
 }
 
 
 function startGame(){
-    let world = new World(canvas, keyboard);
+    world = new World(canvas, keyboard);
     document.getElementById('startScreen').classList.add('hidden')
     document.getElementById('canvas').classList.remove('hidden')
     return world;
@@ -52,6 +54,46 @@ function closeFullscreen() {
   } else if (document.msExitFullscreen) { /* IE11 */
     document.msExitFullscreen();
   }
+}
+
+function registerSounds(audio){
+    if (audio instanceof Audio){
+        allSounds.push(audio)
+    }
+}
+
+function checkLocalStorageSound(){
+    let soundElement = document.getElementById('soundIcon');
+    if (mute === false){
+        soundElement.src = 'imgs/icons/volume.png'
+        console.log('mute is false');
+        
+    }else if(mute === true){
+        soundElement.src = 'imgs/icons/mute.png' 
+        console.log('mute is true');
+        
+    }
+}
+
+function toggleSound(){
+    let soundElement = document.getElementById('soundIcon');
+    if (mute) {
+        mute = false;
+        soundElement.src = 'imgs/icons/volume.png'
+        allSounds.forEach((sound) => {
+            sound.volume = 1;
+            world.setAudioVolume();
+            world.character.setAudioVolume();
+        })
+        localStorage.setItem('mute', mute);
+    }else{
+        mute = true
+        soundElement.src = 'imgs/icons/mute.png' 
+        allSounds.forEach((sound) => {
+            sound.volume = 0;
+        })
+        localStorage.setItem('mute', mute);
+    }
 }
 
 document.addEventListener('keydown', (event) => {

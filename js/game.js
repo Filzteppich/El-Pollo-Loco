@@ -3,6 +3,12 @@ let world;
 let keyboard = new Keyboard();
 let mute = localStorage.getItem('mute') === 'true';
 let allSounds =[];
+let allIntervals = [];
+let isPaused = false;
+let isGameRunning = false;
+let gameFinished = false;
+let gameWin = false;
+let gameLose = false;
 
 function init(){
     canvas = document.getElementById('canvas');
@@ -13,10 +19,62 @@ function init(){
 
 
 function startGame(){
+    resetWorld();
     world = new World(canvas, keyboard);
     document.getElementById('startScreen').classList.add('hidden')
     document.getElementById('canvas').classList.remove('hidden')
+    document.getElementById('returnIcon').classList.remove('hidden')
+    isGameRunning = true
     return world;
+}
+
+function resetWorld(){
+    isGameRunning = true
+    gameFinished = false
+    gameWin = false;
+    gameLose = false;
+    allSounds = [];
+    allIntervals = [];
+}
+
+function returnToStartScreen(){
+    world.collectedBottles = [];
+    stopGame();
+    stopSound();
+    world = null;
+    document.getElementById('startScreen').classList.remove('hidden')
+    document.getElementById('canvas').classList.add('hidden')
+    document.getElementById('returnIcon').classList.add('hidden')
+
+    isGameRunning = false
+}
+
+function setStoppableInterval(fn, time){
+    let intervalIds = setInterval(fn, time);
+    allIntervals.push(intervalIds)
+}
+
+
+function stopGameIntervals(){
+        allIntervals.forEach((interval) => {
+        clearInterval(interval)
+    });
+}
+
+
+function stopGame(){
+    allIntervals.forEach((interval) => {
+        clearInterval(interval)
+    });
+    allSounds.forEach((sound) => {
+        sound.pause();
+        sound.currentTime = 0;
+    })
+    
+}
+
+function endgame(){
+    console.log('Game Over');
 }
 
 function showWindow(id){
@@ -62,6 +120,13 @@ function registerSounds(audio){
     }
 }
 
+function stopSound(){
+    allSounds.forEach((sound) => {
+        sound.pause();
+        sound.currentTime = 0;
+    })
+}
+
 function checkLocalStorageSound(){
     let soundElement = document.getElementById('soundIcon');
     if (mute === false){
@@ -75,30 +140,40 @@ function checkLocalStorageSound(){
     }
 }
 
+
+
 function toggleSound(){
     let soundElement = document.getElementById('soundIcon');
     if (mute) {
-        mute = false;
-        soundElement.src = 'imgs/icons/volume.png'
-        allSounds.forEach((sound) => {
-            sound.volume = 1;
-            world.setAudioVolume();
-            world.character.setAudioVolume();
-        })
-        localStorage.setItem('mute', mute);
+        unmuted(soundElement);
     }else{
-        mute = true
-        soundElement.src = 'imgs/icons/mute.png' 
-        allSounds.forEach((sound) => {
-            sound.volume = 0;
-        })
-        localStorage.setItem('mute', mute);
+        muted(soundElement);
     }
 }
 
+function unmuted(soundElement){
+    mute = false;
+        soundElement.src = 'imgs/icons/volume.png'
+        allSounds.forEach((sound) => {
+            if (world) {
+                sound.volume = 1;
+                world.setAudioVolume();
+                world.character.setAudioVolume();
+            }
+        })
+        localStorage.setItem('mute', mute);
+}
+
+function muted(soundElement){
+    mute = true
+    soundElement.src = 'imgs/icons/mute.png' 
+    allSounds.forEach((sound) => {
+    sound.volume = 0;
+    });
+    localStorage.setItem('mute', mute);
+}
+
 document.addEventListener('keydown', (event) => {
-    
-    
     if (event.code === "Space") {
         keyboard.SPACE = true;
     }

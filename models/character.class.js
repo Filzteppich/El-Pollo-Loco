@@ -110,18 +110,36 @@ class Character extends MovableObject {
     animate(){
         this.deathAnimationPlayed = false;
         this.characterStatus = setInterval(() => {
-            if (this.isDead() && !this.deathAnimationPlayed) {
-                this.playAnimationOnce(this.IMAGES_DEAD);
-                this.deathAnimationPlayed = true;
-                return;
-            }
+            this.deathAnimation();
+            this.checkCharacterStatus();
+        }, 200);
 
-            const idleTime = Date.now() - this.lastMoveTime;
-            if (!this.isDead()) {
+        setStoppableInterval(() => this.jumpAnimation(), 1000 / 10);
+        setStoppableInterval(() => this.walkAnimation(), 50)
+
+        allIntervals.push(this.characterStatus);
+    }
+
+    jumpAnimation(){
+        if (!this.isDead() && this.isAboveGround()){
+        this.playAnimation(this.IMAGES_JUMPING);
+        }
+    }
+
+    walkAnimation(){
+        if (!this.isDead() && !this.isAboveGround() && this.world.keyboard.RIGHT && !isPaused || !this.isDead() && !this.isAboveGround() && this.world.keyboard.LEFT && !isPaused) {
+        this.playAnimation(this.IMAGES_WALK);
+        }
+    }
+
+
+    checkCharacterStatus(){
+        const idleTime = Date.now() - this.lastMoveTime;
+        if (!this.isDead() ) {
                 if (this.isHurt() ) {
                     this.playAnimation(this.IMAGES_HURT);
                     this.longIdleSound.pause()
-                }else if(idleTime > 5000){
+                }else if(idleTime > 5000 && !gameFinished){
                     this.playAnimation(this.IMAGES_LONG_IDLE)
                     this.longIdleSound.play();
                 }else{
@@ -129,28 +147,19 @@ class Character extends MovableObject {
                     this.longIdleSound.pause()
                 }
             }
-        }, 200);
+    }
 
-        
-
-        setInterval(() => {
-            if (!this.isDead() && this.isAboveGround()){
-                this.playAnimation(this.IMAGES_JUMPING);
-            }
-        }, 1000 / 10);
-
-    
-
-        //WALK RIGHT
-        setInterval(() => {
-            if (!this.isDead() && !this.isAboveGround() && this.world.keyboard.RIGHT || !this.isDead() && !this.isAboveGround() && this.world.keyboard.LEFT ) {
-                this.playAnimation(this.IMAGES_WALK);
-            }
-        }, 50)
+    deathAnimation(){
+            if (this.isDead() && !this.deathAnimationPlayed) {
+            this.playAnimationOnce(this.IMAGES_DEAD);
+            this.deathAnimationPlayed = true;
+            gameLose = true;
+            return;
+        }
     }
 
     characterMovement(){
-        setInterval(() => {
+        let characterMoveInterval = setInterval(() => {
         //WALK LEFT
             if (!this.isDead() && this.world.keyboard.LEFT && this.x > 0) {
                 this.moveLeft()
@@ -171,7 +180,8 @@ class Character extends MovableObject {
                 this.jump();
                 this.lastMoveTime = Date.now();
             }
-        }, 50)
+        }, 50);
+        allIntervals.push(characterMoveInterval);
     }
 }
 

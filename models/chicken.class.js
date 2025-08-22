@@ -1,6 +1,6 @@
 class Chicken  extends MovableObject {
 
-    x = 400 + Math.random() * 2220;
+    x = 400 + Math.random() * 3400;
     y = 330;
     height = 100;
     width = 100;
@@ -35,7 +35,7 @@ class Chicken  extends MovableObject {
             this.playChickenSound();
         }, 3000 + Math.random() * 3000);
         registerSounds(this.chickenSound)
-        
+        allIntervals.push(this.soundInterval);        
         
         this.speed = 0.15 + Math.random() * 0.25;
         
@@ -48,6 +48,7 @@ class Chicken  extends MovableObject {
             this.playAnimation(this.IMAGES_WALK)
             }, 300)
             this.clearIntervalAfterDeath.push(this.animationInterval)
+            allIntervals.push(this.animationInterval)
         }
     }
 

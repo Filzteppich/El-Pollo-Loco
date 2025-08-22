@@ -2,9 +2,9 @@ class SmallChicken extends Chicken {
 
 
     x = 400 + Math.random() * 2220;
-    y = 330;
-    height = 100;
-    width = 100;
+    y = 375;
+    height = 60;
+    width = 60;
 
 
     IMAGES_WALK = [

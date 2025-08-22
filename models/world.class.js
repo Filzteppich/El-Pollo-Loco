@@ -15,6 +15,7 @@ enemyStatusbar = new StatusBar('endboss', 430, 50)
 enemyStatusbarVisible = false;
 throwCooldown =  false;
 
+endscreen = null;
 
  
  bounceSound = new Audio('audio/swoop_bound.wav');
@@ -107,22 +108,16 @@ setWorld(){
 }
 
 run(){
+    setStoppableInterval(() => this.jumpOnEnemy(), 10);
+    setStoppableInterval(() => this.EndbossAttack(), 10);
+    setStoppableInterval(() => this.checkEndgame(), 10);
+
+    setStoppableInterval(() => this.checkCollisions(), 200);
     
-    setInterval(() => {
-        this.jumpOnEnemy();
-        this.EndbossAttack();
-    }, 10);
-    
-    setInterval(() => {
-        this.checkCollisions();
-        this.checkEnemyAttack()
-    }, 200);
-    
-    setInterval(() => {
-        this.checkBottleCollision()
-        this.checkCoinCollision();
-        this.checkThrowObjects();
-    }, 100);
+    setStoppableInterval(() => this.checkEnemyAttack(), 100);
+    setStoppableInterval(() => this.checkBottleCollision(), 100);
+    setStoppableInterval(() => this.checkCoinCollision(), 100);
+    setStoppableInterval(() => this.checkThrowObjects(), 100);
 }
 
     EndbossAttack(){
@@ -142,15 +137,29 @@ run(){
                         clearInterval(enemy.moveInterval);
                         enemy.moveInterval = null;
                     }
-                }});
+                }
+            });
             this.enemyStatusbarVisible = true;
         }
     }
 
-
+checkEndgame(){
+    if (gameWin === true && isGameRunning === true){
+        setTimeout(() => {
+            this.endscreen = new Endscreen('win');   
+            setTimeout(stopGameIntervals, 3000)
+            setTimeout(stopSound, 13000)
+        }, 500);
+    }else if(gameLose === true){
+        setTimeout(() => {
+            this.endscreen = new Endscreen('lose');
+            stopGame();
+        }, 1500);
+    }
+}
 
 checkThrowObjects(){
-    if ((this.keyboard.D || this.keyboard.Numpad0) && this.collectedBottles.length > 0 && !this.throwCooldown) {
+    if ((this.keyboard.D || this.keyboard.Numpad0) && this.collectedBottles.length > 0 && !this.throwCooldown &&!this.character.isDead() && isGameRunning) {
         let bottle = this.collectedBottles.splice(0, 1)[0];
         bottle.otherDirection = this.character.otherDirection;
         if (bottle.otherDirection) {
@@ -175,7 +184,7 @@ checkThrowObjects(){
 
 checkCollisions(){
     this.level.enemies.forEach((enemy) => {
-    if(this.character.isColliding(enemy) && !this.character.isDead() && !this.character.isCollidingFromTop(enemy) && !enemy.isDead()){
+    if(this.character.isColliding(enemy) && !this.character.isDead() && !this.character.isCollidingFromTop(enemy) && !enemy.isDead() && !isPaused && isGameRunning){
         this.character.hit(5);
         this.characterHurtSound.play();
         this.healthbar.setPercentage(this.character.characterHealth, this.healthbar.HEALTHBAR_IMAGES);
@@ -293,6 +302,9 @@ draw() {
     this.addToMap(this.healthbar);
     this.addToMap(this.coinbar);
     this.addToMap(this.bottlesbar);
+    if (this.endscreen) {
+        this.addToMap(this.endscreen);
+    }
 
 
     if (this.enemyStatusbarVisible) {
@@ -317,8 +329,8 @@ addToMap(object){
         this.flipImage(object)
     }
 
-     // this.drawFrameBorder(object);
-     // this.drawOffsetFrameBorder(object);
+    //this.drawFrameBorder(object);
+    //this.drawOffsetFrameBorder(object);
 
     this.ctx.drawImage(object.img, object.x, object.y, object.width, object.height);
         

@@ -42,12 +42,10 @@ offset = {
     }
 
     throw(x, y){
-     
             this.x = x;
             this.y = y;
             this.speedY = 20
             this.applyGravity();
-
             this.rotationInterval = setInterval(() => {
                 this.playAnimation(this.ROTATING_BOTTLE_IMAGES)
             }, 50);
@@ -58,11 +56,9 @@ offset = {
                 }else if (this.otherDirection){
                     this.x -= 20;
                 }
-                    
             }, 25);
-            console.log('thrown');
-            
-      
+            allIntervals.push(this.rotationInterval)
+            allIntervals.push(this.directionInterval)
     }
     
 }

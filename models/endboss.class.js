@@ -4,6 +4,7 @@ class Endboss extends MovableObject {
     height = 400;
     width = 400;
     speed = 0.25;
+   
     
 
         offset = {
@@ -57,6 +58,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_ALERT);
         this.animate();
         this.speed = 0.15 + Math.random() * 0.25;
+        this.checkEndgame();
     }
 
     animate(){
@@ -66,8 +68,15 @@ class Endboss extends MovableObject {
         }else{
         this.playAnimation(this.IMAGES_ATTACK)
         }}, 200)
-    
+        allIntervals.push(this.animateInterval)
+    }
 
+
+    checkEndgame(){
+        setStoppableInterval(() => {
+            console.log(gameFinished + ' game is over');
+            
+        }, 500);
     }
 
     checkIfDead(enemyTheme, gameTheme, endbossSound){
@@ -84,7 +93,19 @@ class Endboss extends MovableObject {
             if (i >= this.IMAGES_DEAD.length) {
                 this.stopGameIntervals();
                 this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]]
-                setTimeout(() => {setTimeout(() => {
+                this.playDeathAnimation(enemyTheme, gameTheme, endbossSound);
+            }
+            }, 200);
+            this.clearIntervalAfterDeath.push(interval);
+            allIntervals.push(interval);
+            gameFinished = true;
+            gameWin = true;
+            console.log('game is over ' + gameFinished);
+        }
+    }
+
+playDeathAnimation(enemyTheme, gameTheme, endbossSound){
+                    setTimeout(() => {setTimeout(() => {
                     enemyTheme.pause();
                     gameTheme.currentTime = 0;
                     gameTheme.play();
@@ -93,15 +114,10 @@ class Endboss extends MovableObject {
                 }, 500);
                     this.applyGravity();
                     this.jump()
-                    this.gameFinished = true;
+             
+                    
                 }, 700);
-            }
-            }, 200);
-            this.clearIntervalAfterDeath.push(interval);
-        }
-    }
-
-
+}
 
 
 

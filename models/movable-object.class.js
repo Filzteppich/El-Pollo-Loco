@@ -45,6 +45,7 @@ class MovableObject extends DrawableObject {
                 this.speedY = 0;
             }
         }, 1000 / 60)
+        allIntervals.push(this.gravityInterval);
     }
     
     
@@ -65,8 +66,6 @@ class MovableObject extends DrawableObject {
         
         playAnimationOnce(array){
             let i = 0;
-            console.log('it worked');
-            
             let onceInterval = setInterval(() => {
                 this.img = this.imageCache[array[i]];
                 i++;
@@ -75,11 +74,11 @@ class MovableObject extends DrawableObject {
                     this.img = this.imageCache[array[array.length - 1]]
                 }
             }, 200);
+            allIntervals.push(onceInterval)
         }
         
         jump(){
             this.speedY = 25;
-            
         }
         
         
@@ -126,14 +125,12 @@ class MovableObject extends DrawableObject {
             }, 1000 / 60)
             let i = 0;
             this.clearIntervalAfterDeath.push(this.moveInterval);
-            console.log(this.clearIntervalAfterDeath);
+            allIntervals.push(this.moveInterval);
         }
         
         stopGameIntervals(){
             this.clearIntervalAfterDeath.forEach((interval) => {
                 clearInterval(interval);
-                console.log('cleared');
-                
             })
         }
         

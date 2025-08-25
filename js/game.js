@@ -1,29 +1,30 @@
 let canvas;
 let world;
-let keyboard = new Keyboard();
+let endscreenDiv = null;
+let keyboard;
 let mute = localStorage.getItem('mute') === 'true';
 let allSounds =[];
 let allIntervals = [];
+let allTimeouts = [];
 let isPaused = false;
 let isGameRunning = false;
 let gameFinished = false;
-let gameWin = false;
 let gameLose = false;
 
 function init(){
     canvas = document.getElementById('canvas');
     checkLocalStorageSound();
-
-    // console.log("My Name is:", world.character.name)    
+    keyboard = new Keyboard();
 }
 
 
 function startGame(){
     resetWorld();
     world = new World(canvas, keyboard);
-    document.getElementById('startScreen').classList.add('hidden')
-    document.getElementById('canvas').classList.remove('hidden')
-    document.getElementById('returnIcon').classList.remove('hidden')
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('canvas').classList.remove('hidden');
+    document.getElementById('returnIcon').classList.remove('hidden');
+    document.getElementById('gameUi').classList.remove('hidden');
     isGameRunning = true
     return world;
 }
@@ -31,13 +32,18 @@ function startGame(){
 function resetWorld(){
     isGameRunning = true
     gameFinished = false
-    gameWin = false;
     gameLose = false;
     allSounds = [];
     allIntervals = [];
 }
 
 function returnToStartScreen(){
+    if (endscreenDiv !== null) {
+        endscreenDiv.remove();
+        endscreenDiv = null;
+        document.getElementById('endscreen').classList.add('hidden')
+    }
+
     world.collectedBottles = [];
     stopGame();
     stopSound();
@@ -45,13 +51,15 @@ function returnToStartScreen(){
     document.getElementById('startScreen').classList.remove('hidden')
     document.getElementById('canvas').classList.add('hidden')
     document.getElementById('returnIcon').classList.add('hidden')
+    document.getElementById('gameUi').classList.add('hidden');
 
     isGameRunning = false
 }
 
 function setStoppableInterval(fn, time){
-    let intervalIds = setInterval(fn, time);
-    allIntervals.push(intervalIds)
+    let intervalId = setInterval(fn, time);
+    allIntervals.push(intervalId)
+    return intervalId
 }
 
 
@@ -69,20 +77,63 @@ function stopGame(){
     allSounds.forEach((sound) => {
         sound.pause();
         sound.currentTime = 0;
-    })
-    
+    });
+
+
+    allSounds = [];
 }
 
-function endgame(){
-    console.log('Game Over');
+
+function restartGame(){
+    if (endscreenDiv !== null) {
+        endscreenDiv.remove();
+        endscreenDiv = null;
+    }
+    document.getElementById('endscreen').classList.add('hidden')
+    stopGame();
+    resetWorld();
+    world = null;
+    startGame();
+}
+
+// onclick funktion
+
+function endgame(type){
+    if (type === 'win') {
+        document.getElementById('gameUi').classList.add('hidden');
+        winDisplay();
+    }else if (type === 'lose'){
+        document.getElementById('gameUi').classList.add('hidden');
+        loseDisplay();
+    }
+}
+
+function winDisplay(){
+        document.getElementById('endscreen').classList.remove('hidden')
+        document.getElementById('returnIcon').classList.add('hidden');
+        endscreenDiv = document.createElement('div');
+        endscreenDiv.classList.add('endscreen-content')
+        endscreenDiv.innerHTML = showWinScreen();
+        document.getElementById('endscreen').appendChild(endscreenDiv);
+}
+
+function loseDisplay(){
+        document.getElementById('endscreen').classList.remove('hidden')
+        document.getElementById('returnIcon').classList.add('hidden');
+        endscreenDiv = document.createElement('div');
+        endscreenDiv.classList.add('endscreen-content')
+        endscreenDiv.innerHTML = showLoseScreen();
+        document.getElementById('endscreen').appendChild(endscreenDiv);
 }
 
 function showWindow(id){
     document.getElementById(id).classList.remove('hidden');
+    document.getElementById('info_window_wrapper').classList.remove('hidden');
 }
 
 function closeWindow(id){
     document.getElementById(id).classList.add('hidden');
+    document.getElementById('info_window_wrapper').classList.add('hidden');
 }
 
 function toggleFullscreen(){
@@ -131,12 +182,8 @@ function checkLocalStorageSound(){
     let soundElement = document.getElementById('soundIcon');
     if (mute === false){
         soundElement.src = 'imgs/icons/volume.png'
-        console.log('mute is false');
-        
     }else if(mute === true){
         soundElement.src = 'imgs/icons/mute.png' 
-        console.log('mute is true');
-        
     }
 }
 
@@ -173,50 +220,3 @@ function muted(soundElement){
     localStorage.setItem('mute', mute);
 }
 
-document.addEventListener('keydown', (event) => {
-    if (event.code === "Space") {
-        keyboard.SPACE = true;
-    }
-    if (event.code === "ArrowLeft") {
-        keyboard.LEFT = true;
-    }
-    if (event.code === "ArrowRight") {
-        keyboard.RIGHT = true;
-    }
-    if (event.code === "ArrowDown") {
-        keyboard.DOWN = true;
-    }
-    if (event.code === "ArrowUp") {
-        keyboard.UP = true;
-    }
-    if (event.code === "KeyD") {
-        keyboard.D = true;
-    }
-    if (event.code === "Numpad0") {
-        keyboard.D = true;
-    }
-});
-
-document.addEventListener('keyup', (event) => {
-    if (event.code === "Space") {
-        keyboard.SPACE = false;
-    }
-    if (event.code === "ArrowLeft") {
-        keyboard.LEFT = false;
-    }
-    if (event.code === "ArrowRight") {
-        keyboard.RIGHT = false;
-    }
-    if (event.code === "ArrowDown") {
-        keyboard.DOWN = false;
-    }
-    if (event.code === "ArrowUp") {
-        keyboard.UP = false;
-    }
-    if (event.code === "KeyD") {
-        keyboard.D = false;
-    }
-    if (event.code === "Numpad0") {
-        keyboard.D = false;
-    }
-});

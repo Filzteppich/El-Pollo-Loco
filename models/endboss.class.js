@@ -58,7 +58,6 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_ALERT);
         this.animate();
         this.speed = 0.15 + Math.random() * 0.25;
-        this.checkEndgame();
     }
 
     animate(){
@@ -72,12 +71,7 @@ class Endboss extends MovableObject {
     }
 
 
-    checkEndgame(){
-        setStoppableInterval(() => {
-            console.log(gameFinished + ' game is over');
-            
-        }, 500);
-    }
+
 
     checkIfDead(enemyTheme, gameTheme, endbossSound){
         if (this.isDead()) {
@@ -99,8 +93,6 @@ class Endboss extends MovableObject {
             this.clearIntervalAfterDeath.push(interval);
             allIntervals.push(interval);
             gameFinished = true;
-            gameWin = true;
-            console.log('game is over ' + gameFinished);
         }
     }
 

@@ -6,6 +6,7 @@ keyboard;
 camera_x;
 moveLeftAnimation;
 level;
+endgameInterval;
 character = new Character("Pepe", this.jumpSound);
 drawableObject = new DrawableObject();
 healthbar = new StatusBar('health', 10, 10);
@@ -14,6 +15,7 @@ bottlesbar = new StatusBar('bottle', 430, 10)
 enemyStatusbar = new StatusBar('endboss', 430, 50)
 enemyStatusbarVisible = false;
 throwCooldown =  false;
+
 
 endscreen = null;
 
@@ -29,6 +31,7 @@ endscreen = null;
  themeSong = new Audio('audio/theme_song.wav');
  endbossSound = new Audio('audio/endboss_sound.wav');
  endbossHurtSound = new Audio('audio/endboss_hurt.wav');
+ loseSound = new Audio('audio/lose_sound.mp3');
 
 
 
@@ -75,8 +78,9 @@ thrownObjects=[];
     registerSounds(this.endbossHurtSound);
     registerSounds(this.character.jumpSound);
     registerSounds(this.character.longIdleSound);
+    registerSounds(this.loseSound);
     registerSounds(this.level.enemies.forEach((chicken) =>{
-        registerSounds(chicken.chickensound);
+    registerSounds(chicken.chickensound);
     }))
 }
 
@@ -94,6 +98,7 @@ setAudioVolume(){
     this.themeSong.volume = 0.2;
     this.endbossSound.volume = 0.2;
     this.endbossHurtSound.volume = 0.2;
+    this.loseSound.volume = 0.6;
 }
 
 
@@ -110,7 +115,7 @@ setWorld(){
 run(){
     setStoppableInterval(() => this.jumpOnEnemy(), 10);
     setStoppableInterval(() => this.EndbossAttack(), 10);
-    setStoppableInterval(() => this.checkEndgame(), 10);
+    this.endgameInterval = setStoppableInterval(() => this.checkEndgame(), 500);
 
     setStoppableInterval(() => this.checkCollisions(), 200);
     
@@ -144,17 +149,23 @@ run(){
     }
 
 checkEndgame(){
-    if (gameWin === true && isGameRunning === true){
+    if (gameFinished === true && isGameRunning === true){
         setTimeout(() => {
             this.endscreen = new Endscreen('win');   
-            setTimeout(stopGameIntervals, 3000)
-            setTimeout(stopSound, 13000)
+            setTimeout(() => stopGameIntervals(), 1500);
+            setTimeout(() => endgame('win'), 2000);
         }, 500);
+        clearInterval(this.endgameInterval);
+        this.endgameInterval = null;
     }else if(gameLose === true){
         setTimeout(() => {
             this.endscreen = new Endscreen('lose');
             stopGame();
+            this.loseSound.play();
+            endgame('lose');
         }, 1500);
+        clearInterval(this.endgameInterval);
+        this.endgameInterval = null;
     }
 }
 

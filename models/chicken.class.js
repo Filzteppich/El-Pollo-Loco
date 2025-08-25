@@ -19,13 +19,14 @@ class Chicken  extends MovableObject {
     }
 
     IMAGES_WALK =[
-        '../imgs/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
-        '../imgs/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
-        '../imgs/3_enemies_chicken/chicken_normal/1_walk/3_w.png',
+        'imgs/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
+        'imgs/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
+        'imgs/3_enemies_chicken/chicken_normal/1_walk/3_w.png',
     ]
 
     constructor() {
-        super().loadImage('../imgs/3_enemies_chicken/chicken_normal/1_walk/1_w.png')
+        super()
+        this.loadImage('imgs/3_enemies_chicken/chicken_normal/1_walk/1_w.png')
         this.loadImage('imgs/3_enemies_chicken/chicken_normal/2_dead/dead.png')
         this.loadImages(this.IMAGES_WALK)
         this.animate(0.25);

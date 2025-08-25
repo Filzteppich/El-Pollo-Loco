@@ -100,7 +100,6 @@ class MovableObject extends DrawableObject {
                 this.characterHealth = 0;
             }else{
                 this.characterHealth -= amount;
-                console.log(this.characterHealth);
                 this.lastHit = new Date().getTime();
             }
         }

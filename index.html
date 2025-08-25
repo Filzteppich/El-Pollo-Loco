@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <script src="./models/drawable-object.class.js"></script>
     <script src="./models/movable-object.class.js"></script>
     <script src="./models/keyboard.class.js"></script>
@@ -21,61 +21,146 @@
     <script src="./models/level.class.js"></script>
     <script src="./levels/level1.js"></script>
     <script src="./models/world.class.js"></script>
+    <script src="./js/template.js"></script>
     <script src="./js/game.js"></script>
 
-    <link rel="shortcut icon" href="imgs\8_coin\coin_2.png" type="image/x-icon">
+    <link
+      rel="shortcut icon"
+      href="imgs\8_coin\coin_2.png"
+      type="image/x-icon"
+    />
     <title>El Pollo Loco</title>
-</head>
-<body onload="init()">
-
-    <h1>El Pollo Loco</h1>
+  </head>
+  <body onload="init()">
+    <h1 class="title">El Pollo Loco</h1>
     <div id="fullscreen" class="relative">
-    <canvas class="hidden" width="860" height="480" id="canvas"></canvas>
+      <canvas class="hidden" width="860" height="480" id="canvas"></canvas>
 
-    <div class="settings_icon_container" >
-        <img class="settings_icon" onclick="toggleFullscreen()" src="imgs/icons/fullscreen.png" alt="">
-        <img class="settings_icon" id="soundIcon" onclick="toggleSound()" src="imgs/icons/volume.png" alt="">
-        <img class="settings_icon hidden" id="returnIcon" onclick="returnToStartScreen()" src="imgs/icons/return.png" alt="return_icon">
-    </div>
+      <div class="settings_icon_container">
+        <img
+          class="settings_icon"
+          onclick="toggleFullscreen()"
+          src="imgs/icons/fullscreen.png"
+          alt=""
+        />
+        <img
+          class="settings_icon"
+          id="soundIcon"
+          onclick="toggleSound()"
+          src="imgs/icons/volume.png"
+          alt=""
+        />
+        <img
+          class="settings_icon hidden"
+          id="returnIcon"
+          onclick="returnToStartScreen()"
+          src="imgs/icons/return.png"
+          alt="return_icon"
+        />
+      </div>
 
-<div id="startScreen" class="startScreen">
+      <div id="startScreen" class="startScreen">
         <div class="startScreenContent">
-            <button id="startButton" onclick="startGame()" >Start Game</button>
-            <button id="instructionsButton" onclick="showWindow('instructions')">Instructions</button>
-            <button id="userStoryButton" onclick="showWindow('userStory')">User Stories</button>
-
+          <button id="startButton" onclick="startGame()">Start Game</button>
+          <button id="instructionsButton" onclick="showWindow('instructions')">
+            Instructions
+          </button>
+          <button id="userStoryButton" onclick="showWindow('userStory')">
+            User Stories
+          </button>
         </div>
-        <div class="info_window hidden" id="instructions">
+
+        <div class="info_window_wrapper hidden" id="info_window_wrapper">
+          <div class="info_window hidden" id="instructions">
             <h2>Instructions</h2>
             <div class="close_btn" onclick="closeWindow('instructions')">
-                <img src="imgs/icons/close.png" alt="">    
+              <img src="imgs/icons/close.png" alt="" />
             </div>
             <div class="section">
-                <div>Walk</div>
-                <div><img class="keyboard_img" src="imgs/icons/arrowKeys.png" alt=""></div>
-                <div><img class="character_img" src="imgs/2_character_pepe/2_walk/W-22.png" alt="walk_img"></div>
+              <div>Walk</div>
+              <div>
+                <img
+                  class="keyboard_img"
+                  src="imgs/icons/arrowKeys.png"
+                  alt=""
+                />
+              </div>
+              <div>
+                <img
+                  class="character_img"
+                  src="imgs/2_character_pepe/2_walk/W-22.png"
+                  alt="walk_img"
+                />
+              </div>
             </div>
             <div class="section">
-                <div>Jump</div>
-                <div><img class="space_keyboard_img" src="imgs/icons/space.png" alt="space_icon"></div>
-                <div><img class="character_img" src="imgs/2_character_pepe/3_jump/J-35.png" alt="jump_img"></div>
+              <div>Jump</div>
+              <div>
+                <img
+                  class="space_keyboard_img"
+                  src="imgs/icons/space.png"
+                  alt="space_icon"
+                />
+              </div>
+              <div>
+                <img
+                  class="character_img"
+                  src="imgs/2_character_pepe/3_jump/J-35.png"
+                  alt="jump_img"
+                />
+              </div>
             </div>
             <div class="section">
-                <div>Throw</div>
-                <div><img class="d_keyboard_img" src="imgs/icons/letter-d.png" alt="d_icon"></div>
-                <div><img class="bottle_img" src="imgs/6_salsa_bottle/salsa_bottle.png" alt=""></div>
+              <div>Throw</div>
+              <div>
+                <img
+                  class="d_keyboard_img"
+                  src="imgs/icons/letter-d.png"
+                  alt="d_icon"
+                />
+              </div>
+              <div>
+                <img
+                  class="bottle_img"
+                  src="imgs/6_salsa_bottle/salsa_bottle.png"
+                  alt=""
+                />
+              </div>
             </div>
-        </div>
-        <div class="info_window hidden" id="userStory">
+          </div>
+          <div class="info_window hidden" id="userStory">
             <div class="close_btn" onclick="closeWindow('userStory')">
-                <img src="imgs/icons/close.png" alt="">    
+              <img src="imgs/icons/close.png" alt="" />
             </div>
             <h2>User Story</h2>
-            <span>Play as Pepe, an ordinary Mexican guy having an extraordinary bad chicken day. Out of nowhere, flocks of chickens—from tiny troublemakers to giant feathered bosses—have gone berserk and started attacking people! Armed only with his abuela’s legendary Tabasco sauce bottles, Pepe must spice up the battlefield, tame the rampaging chickens, and save the world one hot splash at a time.</span>
+            <span
+              >Play as Pepe, an ordinary Mexican guy having an extraordinary bad
+              chicken day. Out of nowhere, flocks of chickens—from tiny
+              troublemakers to giant feathered bosses—have gone berserk and
+              started attacking people! Armed only with his abuela’s legendary
+              Tabasco sauce bottles, Pepe must spice up the battlefield, tame
+              the rampaging chickens, and save the world one hot splash at a
+              time.</span
+            >
+          </div>
         </div>
-    </div>
-    </div>
+      </div>
 
+<div class="game_UI hidden" id="gameUi">
+        <div class="control_panel_content">
+            <div class="control_panel">
+                <button class="left_mobile" id="left_mobile"><img src="./imgs/icons/mobile_arrow_left.png" alt=""></button>
+                <button class="right_mobile" id="right_mobile"><img src="./imgs/icons/mobile_arrow_right.png" alt=""></button>
+            </div>
+            <div class="control_panel">
+                <button class="throw_mobile" id="throw_mobile"><img src="./imgs/icons/throw.png" alt=""></button>
+                <button class="jump_mobile" id="jump_mobile"><img src="./imgs/icons/mobile_arrow_up.png" alt=""></button>
+            </div>
+        </div>
+      </div> 
 
-</body>
+      <div id="endscreen" class="endscreen hidden"></div>
+      
+    </div>
+  </body>
 </html>

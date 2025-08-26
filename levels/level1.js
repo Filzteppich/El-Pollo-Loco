@@ -8,16 +8,15 @@ let level1;
 function initLevel(){
 level1 = new Level(
     [
-
-        new Chicken(), 
-        new Chicken(), 
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new SmallChicken(),
-        new SmallChicken(),
-        new SmallChicken(),
-        new Endboss(),
+    new Chicken(), 
+    new Chicken(), 
+    new Chicken(),
+    new Chicken(),
+    new Chicken(),
+    new SmallChicken(),
+    new SmallChicken(),
+    new SmallChicken(),
+    new Endboss(),
     ],[
     new BackgroundObject('imgs/5_background/layers/air.png', -740),
     new BackgroundObject('imgs/5_background/layers/3_third_layer/2.png', -740),
@@ -47,11 +46,11 @@ level1 = new Level(
     new BackgroundObject('imgs/5_background/layers/3_third_layer/2.png', 3700),
     new BackgroundObject('imgs/5_background/layers/2_second_layer/2.png', 3700),
     new BackgroundObject('imgs/5_background/layers/1_first_layer/2.png', 3700),
-],[
+    ],[
  new Clouds('imgs/5_background/layers/4_clouds/1.png', 0),
  new Clouds('imgs/5_background/layers/4_clouds/2.png', 740 + Math.random() * 740),
  new Clouds('imgs/5_background/layers/4_clouds/2.png', 1480 + Math.random() * 740),
-],[
+    ],[
     new ThrowableObject(400, groundPosition,groundBottle),
     new ThrowableObject(500, groundPosition,groundBottle),
     new ThrowableObject(600, groundPosition,groundBottle),
@@ -62,8 +61,7 @@ level1 = new Level(
     new ThrowableObject(1100, topPosition,hoveringBottle),
     new ThrowableObject(1200, topPosition,hoveringBottle),
     new ThrowableObject(1300, groundPosition, groundBottle),
-],[
-    // coins
+    ],[
     new CollectibleObject(300, topPosition),
     new CollectibleObject(370, topPosition),
     new CollectibleObject(440, topPosition),

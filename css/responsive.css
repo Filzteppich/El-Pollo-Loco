@@ -1,0 +1,50 @@
+@media only screen and (max-width: 1180px){
+    #canvas{
+        width: 100vw;
+        height: 100vh;
+        padding-top: 40px;
+    }
+
+    .mobile_hide{
+        display: block;
+    }
+
+    .settings_icon_container{
+        top: 50px;
+    }    
+
+    .relative{
+        width: 100vw ;
+        height: 100vh ;
+    }
+    
+    .relative .startScreen{
+        height: 100vh;
+        width: 100vw;
+    }
+    .title{
+        display: none;
+    }
+
+    .fullscreen_icon{
+        display: none;
+    }
+
+    .endscreen-content{
+        padding-bottom: 0;
+    }
+}
+
+
+@media only screen and (max-height: 480px){
+    .character_img{
+        width: 80px;
+    }
+}
+
+@media only screen and (max-height: 420px){
+    .character_img{
+        width: 72px;
+    }
+
+}

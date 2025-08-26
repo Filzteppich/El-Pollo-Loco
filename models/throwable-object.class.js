@@ -38,7 +38,6 @@ offset = {
         this.y = y;
         this.width =  100;
         this.height = 100;
-         
     }
 
     throw(x, y){
@@ -49,16 +48,20 @@ offset = {
             this.rotationInterval = setInterval(() => {
                 this.playAnimation(this.ROTATING_BOTTLE_IMAGES)
             }, 50);
+            this.checkThrowDirection();
+            allIntervals.push(this.rotationInterval);
+            allIntervals.push(this.directionInterval);
+    }
 
-            this.directionInterval = setInterval(() => {
+    checkThrowDirection(){
+                    this.directionInterval = setInterval(() => {
                 if (!this.otherDirection) {
                     this.x += 20;
                 }else if (this.otherDirection){
                     this.x -= 20;
                 }
             }, 25);
-            allIntervals.push(this.rotationInterval)
-            allIntervals.push(this.directionInterval)
+
     }
     
 }

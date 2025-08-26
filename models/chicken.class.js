@@ -1,6 +1,6 @@
 class Chicken  extends MovableObject {
 
-    x = 400 + Math.random() * 3400;
+    x = 400 + Math.random() * 3200;
     y = 330;
     height = 100;
     width = 100;
@@ -29,7 +29,7 @@ class Chicken  extends MovableObject {
         this.loadImage('imgs/3_enemies_chicken/chicken_normal/1_walk/1_w.png')
         this.loadImage('imgs/3_enemies_chicken/chicken_normal/2_dead/dead.png')
         this.loadImages(this.IMAGES_WALK)
-        this.animate(0.25);
+        this.animate(0.5 + Math.random() * 1.0);
         this.applyGravity();
 
         this.soundInterval = setInterval(() => {
@@ -37,9 +37,6 @@ class Chicken  extends MovableObject {
         }, 3000 + Math.random() * 3000);
         registerSounds(this.chickenSound)
         allIntervals.push(this.soundInterval);        
-        
-        this.speed = 0.15 + Math.random() * 0.25;
-        
     }
 
     animate(speed){

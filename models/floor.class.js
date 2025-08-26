@@ -5,12 +5,7 @@ class Floor extends MovableObject {
     width = 740;
     height = 200;
 
-
     constructor(imgPath){
         super().loadImage(imgPath)
-
     }
-
-
-
 }

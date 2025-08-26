@@ -3,33 +3,7 @@
     src: url('fonts/Ribeye_Marrow/RibeyeMarrow-Regular.ttf');
 }
 
-@media only screen and (max-width: 860px){
-    #canvas{
-        width: 100%;
-    }
 
-    .relative .startScreen{
-        width: 100%;
-    }
-}
-
-@media only screen and (max-height: 480px){ 
-    #canvas {
-        height: 100vh;
-    }
-
-    .relative .startScreen{
-        height: 100vh;
-    }
-
-    .title{
-        display: none;
-    }
-
-    .settings_icon{
-        filter: invert(100%);
-    }
-}
 
 *{
     font-family: 'RibeyeMarrow';
@@ -53,6 +27,10 @@ body {
     background-size: cover;
     background-position: center;
     
+}
+
+.no_scroll{
+    overflow: hidden;
 }
 
 h1{
@@ -271,18 +249,19 @@ position: absolute;
 
 .game_UI{
     position: absolute;
-    bottom: 20px;
+    bottom: 5px;
     width: 100%;
 }
 
 .control_panel_content{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding: 0 24px;
 }
 
 .control_panel_content button{
-    height: 80px;
-    width: 80px;
+    height: 60px;
+    width: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -292,11 +271,15 @@ position: absolute;
 }
 
 .control_panel_content img{
-    height: 80px;
-    width: 80px;
+    height: 60px;
+    width: 60px;
 }
 
 .control_panel{
     display: flex;
     gap: 16px;
+}
+
+.mobile_hide{
+    display: none;
 }

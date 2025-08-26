@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./css/landscape.css" />
+    <link rel="stylesheet" href="./css/responsive.css" />
     <script src="./models/drawable-object.class.js"></script>
     <script src="./models/movable-object.class.js"></script>
     <script src="./models/keyboard.class.js"></script>
@@ -21,6 +23,7 @@
     <script src="./models/level.class.js"></script>
     <script src="./levels/level1.js"></script>
     <script src="./models/world.class.js"></script>
+    <script src="./js/landscape.js"></script>
     <script src="./js/template.js"></script>
     <script src="./js/game.js"></script>
 
@@ -38,7 +41,7 @@
 
       <div class="settings_icon_container">
         <img
-          class="settings_icon"
+          class="settings_icon fullscreen_icon"
           onclick="toggleFullscreen()"
           src="imgs/icons/fullscreen.png"
           alt=""
@@ -66,7 +69,7 @@
             Instructions
           </button>
           <button id="userStoryButton" onclick="showWindow('userStory')">
-            User Stories
+            User Story
           </button>
         </div>
 
@@ -146,7 +149,7 @@
         </div>
       </div>
 
-<div class="game_UI hidden" id="gameUi">
+<div class="game_UI mobile_hide hidden" id="gameUi">
         <div class="control_panel_content">
             <div class="control_panel">
                 <button class="left_mobile" id="left_mobile"><img src="./imgs/icons/mobile_arrow_left.png" alt=""></button>
@@ -160,6 +163,42 @@
       </div> 
 
       <div id="endscreen" class="endscreen hidden"></div>
+
+       <div id="landscape_wrapper">
+        <div id="landscape_modal" class="landscape_modal hidden">
+          <div class="landscape_modal_content">
+            <svg
+              viewBox="0 0 100 200"
+              class="phone"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="10"
+                y="10"
+                width="80"
+                height="180"
+                rx="15"
+                ry="15"
+                fill="#333"
+              />
+              <circle cx="50" cy="180" r="5" fill="#aaa" />
+              <rect
+                x="35"
+                y="20"
+                width="30"
+                height="10"
+                rx="2"
+                ry="2"
+                fill="#666"
+              />
+            </svg>
+            <span>
+            "Please rotate your device to landscape mode for a better
+            experience."
+            </span>
+          </div>
+        </div>
+      </div>
       
     </div>
   </body>

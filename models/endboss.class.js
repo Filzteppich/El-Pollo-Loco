@@ -4,6 +4,7 @@ class Endboss extends MovableObject {
     height = 400;
     width = 400;
     speed = 0.25;
+    interval;
    
     
 
@@ -60,57 +61,57 @@ class Endboss extends MovableObject {
         this.speed = 0.15 + Math.random() * 0.25;
     }
 
-    animate(){
-        this.animateInterval = setInterval(() => {
-        if (this.isHurt()) {
-            this.playAnimation(this.IMAGES_HURT)
-        }else{
-        this.playAnimation(this.IMAGES_ATTACK)
-        }}, 200)
-        allIntervals.push(this.animateInterval)
-    }
-
-
-
-
-    checkIfDead(enemyTheme, gameTheme, endbossSound){
-        if (this.isDead()) {
-            if (this.animateInterval) {
-                clearInterval(this.animateInterval)
-                this.animateInterval = null;
-            }
-
-            let i = 0;
-            let interval = setInterval(() => {
-            this.img = this.imageCache[this.IMAGES_DEAD[i]];
-            i++;
-            if (i >= this.IMAGES_DEAD.length) {
-                this.stopGameIntervals();
-                this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]]
-                this.playDeathAnimation(enemyTheme, gameTheme, endbossSound);
-            }
-            }, 200);
-            this.clearIntervalAfterDeath.push(interval);
-            allIntervals.push(interval);
-            gameFinished = true;
-        }
-    }
-
-playDeathAnimation(enemyTheme, gameTheme, endbossSound){
-                    setTimeout(() => {setTimeout(() => {
-                    enemyTheme.pause();
-                    gameTheme.currentTime = 0;
-                    gameTheme.play();
-                    endbossSound.pause();
-
-                }, 500);
-                    this.applyGravity();
-                    this.jump()
-             
-                    
-                }, 700);
+animate(){
+    this.animateInterval = setInterval(() => {
+    if (this.isHurt()) {
+        this.playAnimation(this.IMAGES_HURT)
+    }else{
+    this.playAnimation(this.IMAGES_ATTACK)
+    }}, 200)
+    allIntervals.push(this.animateInterval)
 }
 
 
 
+
+checkIfDead(enemyTheme, gameTheme, endbossSound){
+    if (this.isDead()) {
+        if (this.animateInterval) {
+            clearInterval(this.animateInterval)
+            this.animateInterval = null;
+        }
+        this.stopDeathAnimationLoop(enemyTheme, gameTheme, endbossSound)
+
+        gameFinished = true;
+    }
+}
+
+stopDeathAnimationLoop(enemyTheme, gameTheme, endbossSound){
+    let i = 0;
+    this.interval = setInterval(() => {
+    this.img = this.imageCache[this.IMAGES_DEAD[i]];
+    i++;
+    if (i >= this.IMAGES_DEAD.length) {
+        this.stopGameIntervals();
+        this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]]
+        this.playDeathAnimation(enemyTheme, gameTheme, endbossSound);
+    }
+    }, 200);
+    this.clearIntervalAfterDeath.push(this.interval);
+    allIntervals.push(this.interval);
+}
+
+
+playDeathAnimation(enemyTheme, gameTheme, endbossSound){
+        setTimeout(() => {
+            setTimeout(() => {
+            enemyTheme.pause();
+            gameTheme.currentTime = 0;
+            gameTheme.play();
+            endbossSound.pause();
+            }, 500);
+        this.applyGravity();
+        this.jump()
+    }, 700);
+}
 }

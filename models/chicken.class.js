@@ -1,3 +1,7 @@
+/**
+ * @class Chicken
+ * @extends {MovableObject}
+ */
 class Chicken  extends MovableObject {
 
     x = 400 + Math.random() * 3200;

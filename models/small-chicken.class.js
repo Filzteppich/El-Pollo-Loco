@@ -1,3 +1,7 @@
+/**
+ * @class SmallChicken
+ * @extends {Chicken}
+ */
 class SmallChicken extends Chicken {
 
 

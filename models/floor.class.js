@@ -1,3 +1,7 @@
+/**
+ * @class Floor
+ * @extends {MovableObject}
+ */
 class Floor extends MovableObject {
     
     x = 100;

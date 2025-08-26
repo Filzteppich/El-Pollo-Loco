@@ -1,3 +1,6 @@
+/**
+ * @class Keyboard
+ */
 class Keyboard {
     LEFT = false;
     RIGHT = false;

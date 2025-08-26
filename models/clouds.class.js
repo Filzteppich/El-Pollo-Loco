@@ -1,3 +1,7 @@
+/**
+ * @class Clouds
+ * @extends {MovableObject}
+ */
 class Clouds extends MovableObject{
 
 x = 0;

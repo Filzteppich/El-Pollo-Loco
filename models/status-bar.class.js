@@ -1,3 +1,7 @@
+/**
+ * @class StatusBar
+ * @extends {DrawableObject}
+ */
 class StatusBar extends DrawableObject{
     
 

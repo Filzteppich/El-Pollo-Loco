@@ -1,3 +1,7 @@
+/**
+ * @class BackgroundObject
+ * @extends {MovableObject}
+ */
 class BackgroundObject extends MovableObject{
 
     x = 0;

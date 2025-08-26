@@ -1,3 +1,7 @@
+/**
+ * @class ThrowableObject
+ * @extends {MovableObject}
+ */
 class ThrowableObject extends MovableObject {
 
 
@@ -40,7 +44,7 @@ offset = {
         this.height = 100;
     }
 
-    
+
 /**
  * @description Throws the object in the specified direction.
  * @param {*} x the starting x position of the object

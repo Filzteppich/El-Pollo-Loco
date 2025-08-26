@@ -1,3 +1,7 @@
+/**
+ * @class CollectibleObject
+ * @extends {MovableObject}
+ */
 class CollectibleObject extends MovableObject {
     offset = {
         top: 35,

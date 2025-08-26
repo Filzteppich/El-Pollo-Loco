@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: movable-object.class.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: movable-object.class.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>class MovableObject extends DrawableObject {
+    
+    speedY = 0;
+    acceleration = 2;
+    characterHealth = 100;
+    chickenHealth = 5;
+    lastHit = 0;
+    gravityInterval;
+    gameFinished = false;
+
+
+   
+    
+    clearIntervalAfterDeath = [];
+    
+    
+    /**
+     * @description Checks if this object is colliding with another object.
+     * @param {*} object the object to check for collision
+     * @returns {*} true if the objects are colliding, false otherwise
+     * @memberof MovableObject
+     */
+    isColliding(object) {
+        return (
+            this.x + this.width - this.offset.right > object.x + object.offset.left &amp;&amp;
+            this.x + this.offset.left &lt; object.x + object.width - object.offset.right &amp;&amp;
+            this.y + this.height - this.offset.bottom > object.y + object.offset.top &amp;&amp;
+            this.y + this.offset.top &lt; object.y + object.height - object.offset.bottom
+        );
+    }
+    /**
+     * @description Checks if this object is colliding with another object from the top, hurts enemy if true.
+     * @param {*} object the object to check for collision
+     * @returns {*} true if the objects are colliding from the top, false otherwise
+     * @memberof MovableObject
+     */
+    isCollidingFromTop(object){
+        return (
+            this.y + this.height - this.offset.bottom &lt;= object.y + object.offset.top + 90 &amp;&amp; 
+            this.y + this.height - this.offset.bottom >= object.y + object.offset.top &amp;&amp;
+            this.x + this.width - this.offset.right > object.x + object.offset.left &amp;&amp;
+            this.x + this.offset.left &lt; object.x + object.width - object.offset.right &amp;&amp;
+            this.speedY &lt; 0 
+        );
+    }
+    
+    
+/**
+ * @description Applies gravity to the object, making it fall down if it is above the ground.
+ * @memberof MovableObject
+ */
+applyGravity(){
+        this.gravityInterval = setInterval(() => {
+            if (this.isAboveGround() || this.speedY > 0) {
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+            }else{
+                this.speedY = 0;
+            }
+        }, 1000 / 60)
+        allIntervals.push(this.gravityInterval);
+    }
+    
+
+/**
+ * @description Checks if the object is above the ground.
+ * @returns {*} true if the object is above the ground, false otherwise
+ * @memberof MovableObject
+ */
+isAboveGround(){
+    if (this instanceof ThrowableObject || this instanceof Endboss) {
+        return true;
+    }else{
+        return this.y &lt; 130;
+    }}
+        
+        /**
+         * @description Plays the animation for the object.
+         * @param {*} images the array of images to use for the animation
+         * @memberof MovableObject
+         */
+        playAnimation(images){
+            let i = this.currentImage % images.length;
+            let path = images[i];
+            this.img  = this.imageCache[path];
+            this.currentImage++;
+        }
+
+
+        /**
+         * @description Plays the animation for the object once.
+         * @param {*} array the array of images to use for the animation
+         * @memberof MovableObject
+         */
+        playAnimationOnce(array){
+            let i = 0;
+            let onceInterval = setInterval(() => {
+                this.img = this.imageCache[array[i]];
+                i++;
+                if (i >= array.length) {
+                    clearInterval(onceInterval);
+                    this.img = this.imageCache[array[array.length - 1]]
+                }
+            }, 200);
+            allIntervals.push(onceInterval)
+        }
+
+
+        /**
+         * @description Makes the object jump.
+         * @memberof MovableObject
+         */
+        jump(){
+            this.speedY = 25;
+        }
+        
+        /**
+         * @description Moves the Character to the left.
+         * @memberof MovableObject
+         */
+        moveLeft(){
+            this.x -= this.speed ;
+            this.otherDirection = true;
+        }
+        
+        /**
+         * @description Moves the Character to the right.
+         * @memberof MovableObject
+         */
+        moveRight(){
+            this.x += this.speed ;
+            this.otherDirection = false;
+        }
+        
+
+        /**
+         * @description Reduces the objects health by the specified amount.
+         * @param {*} amount the amount to reduce the health by
+         * @memberof MovableObject
+         */
+        hit(amount){
+            if (this.characterHealth &lt;= 0) {
+                this.characterHealth = 0;
+            }else{
+                this.characterHealth -= amount;
+                this.lastHit = new Date().getTime();
+            }
+        }
+        
+        
+        
+        /**
+         * @description Checks if the object is currently hurt.
+         * @returns {*} true if the object is hurt, false otherwise
+         * @memberof MovableObject
+         */
+        isHurt(){
+            let timePassed = new Date().getTime() - this.lastHit;
+            timePassed = timePassed / 1000;
+            return timePassed &lt; 1;
+        }
+        
+
+        /**
+         * @description Checks the health if the object is dead.
+         * @returns {*} true if the object is dead, false otherwise
+         * @memberof MovableObject
+         */
+        isDead(){
+            return this.characterHealth == 0;
+        }
+
+
+        /**
+         * @description Moves the Character to the left.
+         * @param {*} speed
+         * @memberof MovableObject
+         */
+        movingLeft(speed){
+            this.moveInterval = setInterval(() => {
+                this.x -= speed;
+            }, 1000 / 60)
+            let i = 0;
+            this.clearIntervalAfterDeath.push(this.moveInterval);
+            allIntervals.push(this.moveInterval);
+        }
+
+        
+        /**
+         * @description Stops all intervals after the object is dead.
+         * @memberof MovableObject
+         */
+        stopGameIntervals(){
+            this.clearIntervalAfterDeath.forEach((interval) => {
+                clearInterval(interval);
+            })
+        }
+        
+        
+        
+    }</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Aug 26 2025 18:57:45 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

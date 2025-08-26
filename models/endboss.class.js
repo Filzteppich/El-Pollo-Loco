@@ -1,3 +1,7 @@
+/**
+ * @class Endboss
+ * @extends {MovableObject}
+ */
 class Endboss extends MovableObject {
     x = 3700;
     y = 50;

@@ -1,3 +1,7 @@
+/**
+ * @class Level
+ * @extends {DrawableObject}
+ */
 class Level {
     enemies;
     backgroundObject;

@@ -1,3 +1,7 @@
+/**
+ * @class Character
+ * @extends {MovableObject}
+ */
 class Character extends MovableObject {
 
     x = 80

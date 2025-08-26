@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: world.class.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: world.class.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>class World {
+canvas;
+ctx;
+keyboard;
+camera_x;
+moveLeftAnimation;
+level;
+endgameInterval;
+character = new Character("Pepe");
+drawableObject = new DrawableObject();
+healthbar = new StatusBar('health', 10, 10);
+coinbar = new StatusBar('coin', 220, 10);
+bottlesbar = new StatusBar('bottle', 430, 10)
+enemyStatusbar = new StatusBar('endboss', 430, 50)
+enemyStatusbarVisible = false;
+throwCooldown =  false;
+endscreen = null;
+
+ bounceSound = new Audio('audio/swoop_bound.wav');
+ throwSound = new Audio('audio/throw.wav');
+ splashSound = new Audio('audio/splash_sound.mp3');
+ chickenHurtSound = new Audio('audio/chicken_hurt_sound_.wav');
+ characterHurtSound = new Audio('audio/character_hurt.wav');
+ finalBossTheme = new Audio('audio/final_boss.wav');
+ coinSound = new Audio('audio/coin_sound.mp3');
+ bottleSound = new Audio('audio/bottle_collect.wav');
+ themeSong = new Audio('audio/theme_song.wav');
+ endbossSound = new Audio('audio/endboss_sound.wav');
+ endbossHurtSound = new Audio('audio/endboss_hurt.wav');
+ loseSound = new Audio('audio/lose_sound.mp3');
+
+collectedBottles = [];
+collectedCoins = [];
+thrownObjects=[];
+
+
+    constructor(canvas, keyboard){
+        this.ctx = canvas.getContext('2d');
+        this.canvas = canvas;
+        this.keyboard = keyboard;
+        this.setAudioVolume();
+        initLevel()
+        this.level = level1;
+        this.draw();
+        this.setWorld();
+        this.run();
+        this.bottlesbar.setPercentage(this.collectedBottles.length * 10, this.bottlesbar.BOTTLE_IMAGES)
+        this.coinbar.setPercentage(this.collectedCoins.length * 10, this.coinbar.COIN_IMAGES)
+        this.playIntroSound();
+        this.collectSounds();
+        this.checkAudioBeforeStart();
+    }
+
+
+    /**
+     * @description Collects all the sounds used in the game and registers them for global control.
+     * @memberof World
+     */
+    collectSounds(){
+    registerSounds(this.bounceSound);
+    registerSounds(this.throwSound);
+    registerSounds(this.splashSound);
+    registerSounds(this.chickenHurtSound);
+    registerSounds(this.characterHurtSound);
+    registerSounds(this.finalBossTheme);
+    registerSounds(this.coinSound);
+    registerSounds(this.bottleSound);
+    registerSounds(this.themeSong);
+    registerSounds(this.endbossSound);
+    registerSounds(this.endbossHurtSound);
+    registerSounds(this.character.jumpSound);
+    registerSounds(this.character.longIdleSound);
+    registerSounds(this.loseSound);
+    registerSounds(this.level.enemies.forEach((chicken) =>{
+    registerSounds(chicken.chickensound);
+    }))
+}
+
+/**
+ * @description Checks if audio is muted before starting the game.
+ * @memberof World
+ */
+checkAudioBeforeStart(){
+    if (mute){
+        allSounds.forEach((sound) => {
+            sound.volume = 0;
+        })
+    }
+}
+
+
+/**
+ * @description Sets the audio volume for all game sounds.
+ * @memberof World
+ */
+setAudioVolume(){
+    this.bounceSound.volume = 1.0;
+    this.finalBossTheme.volume = 0.3;
+    this.themeSong.volume = 0.2;
+    this.endbossSound.volume = 0.2;
+    this.endbossHurtSound.volume = 0.2;
+    this.loseSound.volume = 0.6;
+}
+
+
+/**
+ * @description Plays the intro theme song and sets it to loop.
+ * @memberof World
+ */
+playIntroSound(){
+    this.themeSong.play();
+    this.themeSong.loop = true;
+}
+
+
+/**
+ * @description Sets the world for the character to enable interaction between them.
+ * @memberof World
+ */
+setWorld(){
+    this.character.world = this;
+}
+
+/**
+ * @description Starts the main game loop, checking for various game events and updating the game state.
+ * @memberof World
+ */
+run(){
+    setStoppableInterval(() => this.jumpOnEnemy(), 10);
+    setStoppableInterval(() => this.EndbossAttack(), 10);
+    this.endgameInterval = setStoppableInterval(() => this.checkEndgame(), 500);
+    setStoppableInterval(() => this.checkCollisions(), 200);
+    setStoppableInterval(() => this.checkEnemyAttack(), 100);
+    setStoppableInterval(() => this.checkBottleCollision(), 100);
+    setStoppableInterval(() => this.checkCoinCollision(), 100);
+    setStoppableInterval(() => this.checkThrowObjects(), 100);
+}
+
+
+/**
+ * @description Handles the endboss attack logic, triggering the endboss entry when the character reaches a certain position.
+ * @memberof World
+ */
+EndbossAttack(){
+    if (this.character.x > 3200) {
+            this.level.enemies.forEach(enemy => {
+                if (enemy instanceof Endboss &amp;&amp; !enemy.isDead()) {
+                    this.endbossEntry(enemy);
+                }else if(enemy instanceof Endboss &amp;&amp; enemy.isDead()){
+                    if (enemy.moveInterval) {
+                        clearInterval(enemy.moveInterval);
+                        enemy.moveInterval = null;
+                    }
+                }
+            });
+            this.enemyStatusbarVisible = true;
+        }
+    }
+
+
+/**
+ * @description Handles the entry of the endboss, starting its movement and associated sounds.
+ * @param {*} enemy the endboss enemy instance
+ * @memberof World
+ */
+endbossEntry(enemy){
+    if (!enemy.moveInterval) {
+        enemy.movingLeft(1.5);
+        this.themeSong.pause();
+        this.finalBossTheme.play();
+        this.endbossSound.play();
+        this.endbossSound.loop = true;
+    }
+        enemy.checkIfDead();
+    }
+
+
+/**
+ * @description Checks the endgame conditions and displays the appropriate end screen.
+ * @memberof World
+ */
+checkEndgame(){
+    if (gameFinished === true &amp;&amp; isGameRunning === true){
+        this.showWinScreen();
+    }else if(gameLose === true){
+        this.showLoseScreen();
+    }
+}
+
+/**
+ * @description Displays the win screen and stops game intervals.
+ * @memberof World
+ */
+showWinScreen(){
+    setTimeout(() => {
+    this.endscreen = new Endscreen('win');   
+    setTimeout(() => stopGameIntervals(), 1500);
+    setTimeout(() => endgame('win'), 2000);
+    }, 500);
+    clearInterval(this.endgameInterval);
+    this.endgameInterval = null;
+}
+
+/**
+ * @description Displays the lose screen and stops game intervals.
+ * @memberof World
+ */
+showLoseScreen(){
+    setTimeout(() => {
+    this.endscreen = new Endscreen('lose');
+    stopGame();
+    this.loseSound.play();
+    endgame('lose');
+    }, 1500);
+    clearInterval(this.endgameInterval);
+    this.endgameInterval = null;
+}
+/**
+ * @description Checks if the player is attempting to throw an object and handles the throwing logic.
+ * @memberof World
+ */
+checkThrowObjects(){
+    if ((this.keyboard.D) &amp;&amp; this.collectedBottles.length > 0 &amp;&amp; !this.throwCooldown &amp;&amp;!this.character.isDead() &amp;&amp; isGameRunning) {
+        this.throwBottle();
+        this.bottlesbar.setPercentage(this.collectedBottles.length * 10, this.bottlesbar.BOTTLE_IMAGES)
+        this.character.lastMoveTime = Date.now();
+        setTimeout(() => {
+            this.throwCooldown = false;
+        }, 1000)
+    }
+}
+
+
+/**
+ * @description Handles the throwing of a bottle object.
+ * @memberof World
+ */
+throwBottle(){
+    let bottle = this.collectedBottles.splice(0, 1)[0];
+    bottle.otherDirection = this.character.otherDirection;
+    if (bottle.otherDirection) {
+        bottle.throw(this.character.x - 100 + this.character.width / 2, this.character.y + this.character.height / 2)
+        this.throwCooldown = true;
+        this.throwSound.play()
+    }else{
+        bottle.throw(this.character.x + this.character.width / 2, this.character.y + this.character.height / 2)
+        this.throwCooldown = true;
+        this.throwSound.play()
+    }
+    this.thrownObjects.push(bottle);
+}
+
+
+/**
+ * @description Checks for collisions between the character and enemies.
+ * @memberof World
+ */
+checkCollisions(){
+    this.level.enemies.forEach((enemy) => {
+    if(this.character.isColliding(enemy) &amp;&amp; !this.character.isDead() &amp;&amp; !this.character.isCollidingFromTop(enemy) &amp;&amp; !enemy.isDead() &amp;&amp; !isPaused &amp;&amp; isGameRunning){
+        this.character.hit(5);
+        this.characterHurtSound.play();
+        this.healthbar.setPercentage(this.character.characterHealth, this.healthbar.HEALTHBAR_IMAGES);
+        }
+    })
+}
+
+
+/**
+ * @description Handles the character jumping on an enemy.
+ * @memberof World
+ */
+jumpOnEnemy(){
+    this.level.enemies.forEach((enemy) => {
+        if (this.character.isCollidingFromTop(enemy) &amp;&amp; !enemy.isDead() &amp;&amp; enemy instanceof Chicken) {
+        this.character.jump();
+        enemy.hit(100)
+        enemy.checkIfDead();
+        this.bounceSound.currentTime = 0
+        this.bounceSound.play();
+        }
+    });
+}
+
+/**
+ * @description Checks if bottles are colliding with enemies and handles the attack logic.
+ * @memberof World
+ */
+checkEnemyAttack(){
+    this.level.enemies.forEach((enemy) => {
+        this.thrownObjects.forEach((bottle) => {
+            if (bottle.isColliding(enemy) &amp;&amp; enemy instanceof Chicken &amp;&amp; !enemy.isDead()) {
+                this.chickenHit(bottle, enemy)
+            }else if (bottle.isColliding(enemy) &amp;&amp; enemy instanceof Endboss &amp;&amp; !enemy.isDead() &amp;&amp; !enemy.isHurt()){
+                this.endbossHit(bottle, enemy)
+            }
+        })
+    })
+}
+/**
+ * @description Handles the attack logic when a bottle hits a chicken enemy.
+ * @param {*} bottle the bottle object
+ * @param {*} enemy the chicken enemy object
+ * @memberof World
+ */
+chickenHit(bottle, enemy){
+    enemy.hit(100);
+    this.bottleSplash(bottle);
+    enemy.checkIfDead()
+    this.splashSound.currentTime = 0;
+    this.playAudio(this.splashSound)
+    this.playAudio(this.chickenHurtSound)
+}
+
+
+/**
+ * @description Handles the attack logic when a bottle hits an endboss enemy.
+ * @param {*} bottle the bottle object
+ * @param {*} enemy the endboss enemy object
+ * @memberof World
+ */
+endbossHit(bottle, enemy){
+    enemy.hit(25);
+    this.bottleSplash(bottle);
+    this.enemyStatusbar.setPercentage(enemy.characterHealth, this.enemyStatusbar.ENDBOSS_STATUSBAR_IMAGES)
+    enemy.checkIfDead(this.finalBossTheme, this.themeSong, this.endbossSound)
+    this.splashSound.currentTime = 0;
+    this.splashSound.play();
+    this.endbossHurtSound.currentTime = 0;
+    this.endbossHurtSound.play();
+}
+
+
+/**
+ * @description Plays the specified audio.
+ * @param {*} audio the audio object
+ * @memberof World
+ */
+playAudio(audio){
+    audio.currentTime = 0;
+    audio.play();
+}
+
+
+/**
+ * @description Handles the bottle splash effect.
+ * @param {*} bottle the bottle object
+ * @memberof World
+ */
+bottleSplash(bottle){
+    this.clearBottleIntervals(bottle);
+    bottle.playAnimationOnce(bottle.SPLASHING_BOTTLE_IMAGES);
+
+    setTimeout(() => {
+        this.thrownObjects.splice(this.thrownObjects.indexOf(bottle), 1);
+    }, 500);
+}
+
+
+/**
+ * @description Clears the bottle's intervals.
+ * @param {*} bottle the bottle object
+ * @memberof World
+ */
+clearBottleIntervals(bottle){
+    if (bottle.gravityInterval){
+        clearInterval(bottle.gravityInterval);
+        bottle.gravityInterval = null;
+    }
+    if (bottle.directionInterval &amp;&amp; bottle.rotationInterval) {
+        clearInterval(bottle.directionInterval);
+        clearInterval(bottle.rotationInterval);
+        bottle.directionInterval = null;
+    }
+}
+
+
+/**
+ * @description Checks for collisions between the character and bottles, updating the collected bottles and status bar accordingly.
+ * @memberof World
+ */
+checkBottleCollision(){
+        this.level.bottles.forEach((bottle) => {
+            if (this.character.isColliding(bottle)) {
+                let removedBottle = this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1)[0];
+                this.collectedBottles.push(removedBottle);
+                this.bottlesbar.setPercentage(this.collectedBottles.length * 10, this.bottlesbar.BOTTLE_IMAGES)
+                this.bottleSound.currentTime = 0;
+                this.bottleSound.play();
+            }
+        })
+}
+
+
+/**
+ * @description Checks for collisions between the character and coins, updating the collected coins and status bar accordingly.
+ * @memberof World
+ */
+checkCoinCollision(){
+    this.level.coins.forEach((coin) => {
+        if (this.character.isColliding(coin)){
+            let removedCoin = this.level.coins.splice(this.level.coins.indexOf(coin), 1)[0];
+            this.collectedCoins.push(removedCoin);
+            this.coinbar.setPercentage(this.collectedCoins.length * 10, this.coinbar.COIN_IMAGES);
+            this.coinSound.currentTime = 0;
+            this.coinSound.play();
+        }
+    })
+}
+
+/**
+ * @description Draws the entire game world, including background, characters, enemies, and UI elements.
+ * @memberof World
+ */
+draw() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    this.ctx.translate(this.camera_x, 0);
+    this.addObjectsToMap(this.level.backgroundObject)
+    this.addObjectsToMap(this.level.clouds);
+    this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.bottles);
+    this.addObjectsToMap(this.level.coins);
+    this.addObjectsToMap(this.thrownObjects);
+    this.addToMap(this.character);
+    this.ctx.translate(-this.camera_x, 0);
+    this.addToMap(this.healthbar);
+    this.addToMap(this.coinbar);
+    this.addToMap(this.bottlesbar);
+
+    if (this.endscreen) {
+        this.addToMap(this.endscreen);
+    }
+
+    if (this.enemyStatusbarVisible) {
+        this.addToMap(this.enemyStatusbar)
+    }
+
+    let self = this;
+    requestAnimationFrame(() => {self.draw()})
+}
+
+
+/**
+ * @description Adds an array of objects to the map by drawing each one.
+ * @param {*} object
+ * @memberof World
+ */
+addObjectsToMap(object){
+    object.forEach(obj => {this.addToMap(obj)});
+}
+
+
+/**
+ * @description Adds a single object to the map, handling direction and flipping if necessary.
+ * @param {*} object
+ * @memberof World
+ */
+addToMap(object){
+    if (object.otherDirection) {
+        this.flipImage(object)
+    }
+    this.ctx.drawImage(object.img, object.x, object.y, object.width, object.height);
+    if (object.otherDirection) {
+        this.flipImageBack(object)
+    }
+}
+
+/**
+ * @description Flips the image of an object horizontally.
+ * @param {*} object the object to flip
+ * @memberof World
+ */
+flipImage(object){
+    this.ctx.save();
+    this.ctx.translate(object.width, 0);
+    this.ctx.scale(-1, 1);
+    object.x = -object.x;
+}
+
+/**
+ * @description Flips the image of an object back to its original orientation.
+ * @param {*} object the object to flip back
+ * @memberof World
+ */
+flipImageBack(object){
+    object.x = -object.x;
+    this.ctx.restore();
+}
+
+/**
+ * @description Draws a frame border around the object for debugging purposes.
+ * @param {*} object the object to draw the border around
+ * @memberof World
+ */
+drawFrameBorder(object){
+    if (object instanceof Character || object instanceof Chicken || object instanceof Endboss || object instanceof ThrowableObject || object instanceof CollectibleObject) {
+        this.ctx.beginPath();
+        this.ctx.lineWidth = "5";
+        this.ctx.strokeStyle = "navy";
+        this.ctx.rect(object.x, object.y, object.width, object.height);
+        this.ctx.stroke(); 
+    }
+}
+
+
+/**
+ * @description Draws a red border around the offset area of the object for debugging purposes.
+ * @param {*} object the object to draw the border around
+ * @memberof World
+ */
+drawOffsetFrameBorder(object){
+    if (object instanceof Character || object instanceof Chicken || object instanceof Endboss || object instanceof ThrowableObject || object instanceof CollectibleObject) {
+        this.ctx.beginPath();
+        this.ctx.lineWidth = "5";
+        this.ctx.strokeStyle = "red";
+        this.ctx.rect(
+            object.x + object.offset.left,
+            object.y + object.offset.top,
+            object.width - object.offset.right - object.offset.left,
+            object.height - object.offset.bottom - object.offset.top
+        );
+        this.ctx.stroke(); 
+    }
+}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Aug 26 2025 18:57:45 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

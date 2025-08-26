@@ -1,3 +1,7 @@
+/**
+ * @class World
+ * 
+ */
 class World {
 canvas;
 ctx;
@@ -49,8 +53,9 @@ thrownObjects=[];
         this.playIntroSound();
         this.collectSounds();
         this.checkAudioBeforeStart();
-
     }
+
+
     /**
      * @description Collects all the sounds used in the game and registers them for global control.
      * @memberof World

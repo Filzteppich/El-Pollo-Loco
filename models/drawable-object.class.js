@@ -1,3 +1,6 @@
+/**
+ * @class DrawableObject
+ */
 class DrawableObject {
     x = 120;
     y = 100;

@@ -1,3 +1,7 @@
+/**
+ * @class MovableObject
+ * @extends {DrawableObject}
+ */
 class MovableObject extends DrawableObject {
     
     speedY = 0;
@@ -185,7 +189,7 @@ isAboveGround(){
             allIntervals.push(this.moveInterval);
         }
 
-        
+
         /**
          * @description Stops all intervals after the object is dead.
          * @memberof MovableObject

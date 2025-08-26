@@ -1,3 +1,7 @@
+/**
+ * @class Endscreen
+ * @extends {DrawableObject}
+ */
 class Endscreen extends DrawableObject{
     
     

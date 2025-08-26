@@ -60,7 +60,10 @@ class Endboss extends MovableObject {
         this.animate();
         this.speed = 0.15 + Math.random() * 0.25;
     }
-
+/**
+ * @description Animates the endboss by playing the appropriate animation based on its state.
+ * @memberof Endboss
+ */
 animate(){
     this.animateInterval = setInterval(() => {
     if (this.isHurt()) {
@@ -73,7 +76,13 @@ animate(){
 
 
 
-
+/**
+ * @description Checks if the endboss is dead and handles the death animation and game finish logic.
+ * @param {*} enemyTheme theme of the enemy
+ * @param {*} gameTheme theme of the game
+ * @param {*} endbossSound sound of the endboss
+ * @memberof Endboss
+ */
 checkIfDead(enemyTheme, gameTheme, endbossSound){
     if (this.isDead()) {
         if (this.animateInterval) {
@@ -85,7 +94,13 @@ checkIfDead(enemyTheme, gameTheme, endbossSound){
         gameFinished = true;
     }
 }
-
+/**
+ * @description Checks if the endboss is dead and plays the death animation only one time.
+ * @param {*} enemyTheme theme of the enemy
+ * @param {*} gameTheme theme of the game
+ * @param {*} endbossSound sound of the endboss
+ * @memberof Endboss
+ */
 stopDeathAnimationLoop(enemyTheme, gameTheme, endbossSound){
     let i = 0;
     this.interval = setInterval(() => {
@@ -101,7 +116,13 @@ stopDeathAnimationLoop(enemyTheme, gameTheme, endbossSound){
     allIntervals.push(this.interval);
 }
 
-
+/**
+ * @description updates the endboss state and plays the appropriate animation and sounds.
+ * @param {*} enemyTheme theme of the enemy
+ * @param {*} gameTheme theme of the game
+ * @param {*} endbossSound sound of the endboss
+ * @memberof Endboss
+ */
 playDeathAnimation(enemyTheme, gameTheme, endbossSound){
         setTimeout(() => {
             setTimeout(() => {

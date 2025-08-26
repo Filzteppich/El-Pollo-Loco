@@ -53,7 +53,14 @@ class StatusBar extends DrawableObject{
         this.loadImages(this.images);
     }
 
-    checkType(type){
+
+/**
+ * @description Checks the type of status bar and returns the corresponding image array.
+ * @param {*} type
+ * @returns {*} 
+ * @memberof StatusBar
+ */
+checkType(type){
         if (type === 'health'){
             return this.images = this.HEALTHBAR_IMAGES;
         }else if (type === 'coin'){
@@ -63,13 +70,16 @@ class StatusBar extends DrawableObject{
         }else if (type === 'endboss'){
             return this.images = this.ENDBOSS_STATUSBAR_IMAGES
         }
-
-
     }
 
 
-
-    setPercentage(percentage, statusBarType){
+/**
+ * @description Sets the percentage and status bar type for the status bar.
+ * @param {*} percentage updates status bar according to the current health or collected objects.
+ * @param {*} statusBarType the type of status bar (health, coin, bottle, endboss)
+ * @memberof StatusBar
+ */
+setPercentage(percentage, statusBarType){
         this.percentage = percentage;
         this.statusBarType = statusBarType;
 
@@ -77,7 +87,13 @@ class StatusBar extends DrawableObject{
         this.img = this.imageCache[path];
     }
 
-    resolveImageIndex(){
+
+/**
+ * @description Resolves the image index based on the current percentage.
+ * @returns {*} The image index for the current percentage.
+ * @memberof StatusBar
+ */
+resolveImageIndex(){
         if (this.percentage == 100) {
             return 5
         }else if(this.percentage >= 80){

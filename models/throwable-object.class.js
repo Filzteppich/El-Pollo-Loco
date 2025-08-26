@@ -40,7 +40,14 @@ offset = {
         this.height = 100;
     }
 
-    throw(x, y){
+    
+/**
+ * @description Throws the object in the specified direction.
+ * @param {*} x the starting x position of the object
+ * @param {*} y the starting y position of the object
+ * @memberof ThrowableObject
+ */
+throw(x, y){
             this.x = x;
             this.y = y;
             this.speedY = 20
@@ -53,7 +60,12 @@ offset = {
             allIntervals.push(this.directionInterval);
     }
 
-    checkThrowDirection(){
+
+/**
+ * @description Checks the throw direction and updates the position accordingly.
+ * @memberof ThrowableObject
+ */
+checkThrowDirection(){
                     this.directionInterval = setInterval(() => {
                 if (!this.otherDirection) {
                     this.x += 20;

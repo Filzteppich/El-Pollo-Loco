@@ -13,8 +13,11 @@ height = 460;
         this.x = x;
         this.animate();
     }
-
-    animate(){
+/**
+ * @description Animates the clouds by moving them to the left.
+ * @memberof Clouds
+ */
+animate(){
         this.movingLeft();
     }
 

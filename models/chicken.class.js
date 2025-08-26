@@ -38,8 +38,12 @@ class Chicken  extends MovableObject {
         registerSounds(this.chickenSound)
         allIntervals.push(this.soundInterval);        
     }
-
-    animate(speed){
+/**
+ * @description Animates the chicken by moving it left and playing the walking animation.
+ * @param {*} speed speed of the chicken depending on the enemy type
+ * @memberof Chicken
+ */
+animate(speed){
         if (!this.isDead()) {
             this.movingLeft(speed);
             this.animationInterval = setInterval(() => {
@@ -50,8 +54,11 @@ class Chicken  extends MovableObject {
         }
     }
 
-
-    checkIfDead(){
+/**
+ * @description Checks if the chicken is dead and handles the death animation and sound.
+ * @memberof Chicken
+ */
+checkIfDead(){
             if (this.isDead()) {
                 if (this instanceof SmallChicken) {
                     this.img.src = 'imgs/3_enemies_chicken/chicken_small/2_dead/dead.png'
@@ -63,8 +70,11 @@ class Chicken  extends MovableObject {
                 clearInterval(this.soundInterval)
             }
     }
-
-    playChickenSound(){
+/**
+ * @description Plays the chicken sound at a set volume, considering the mute setting.
+ * @memberof Chicken
+ */
+playChickenSound(){
         this.chickensound.volume = 0.4;
         this.chickensound.play();
         if (mute) {

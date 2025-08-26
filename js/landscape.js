@@ -1,3 +1,6 @@
+/**
+ * @description Checks the orientation of the device and shows a modal if in portrait mode on mobile.
+ */
 function checkOrientation() {
     window.addEventListener('resize', checkOrientation);
     const isProbablyMobile = window.innerWidth <= 1180;

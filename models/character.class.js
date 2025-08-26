@@ -99,40 +99,54 @@ class Character extends MovableObject {
         this.characterMovement();
     }
 
-
-    setAudioVolume(){
+/**
+ * @description Sets the audio volume for jump and long idle sounds.
+ * @memberof Character
+ */
+setAudioVolume(){
         this.jumpSound.volume = 0.3;
         this.longIdleSound.volume = 0.5;
     }
 
-
-    animate(){
+/**
+ * @description Handles the animation of the character including death, jump, walk, and idle animations.
+ * @memberof Character
+ */
+animate(){
         this.deathAnimationPlayed = false;
         setStoppableInterval(() => {
             this.deathAnimation();
             this.checkCharacterStatus();
         }, 200);
-
         setStoppableInterval(() => this.jumpAnimation(), 1000 / 10);
         setStoppableInterval(() => this.walkAnimation(), 50)
     }
 
-
-    jumpAnimation(){
+/**
+ * @description Handles the jump animation of the character.
+ * @memberof Character
+ */
+jumpAnimation(){
         if (!this.isDead() && this.isAboveGround()){
         this.playAnimation(this.IMAGES_JUMPING);
         }
     }
 
-
-    walkAnimation(){
+/**
+ * @description Handles the walk animation of the character.
+ * @memberof Character
+ */
+walkAnimation(){
         if (!this.isDead() && !this.isAboveGround() && this.world.keyboard.RIGHT && !isPaused || !this.isDead() && !this.isAboveGround() && this.world.keyboard.LEFT && !isPaused) {
         this.playAnimation(this.IMAGES_WALK);
         }
     }
 
-
-    checkCharacterStatus(){
+/**
+ * @description Checks the status of the character and updates animations accordingly.
+ * @memberof Character
+ */
+checkCharacterStatus(){
         const idleTime = Date.now() - this.lastMoveTime;
         if (!this.isDead() ) {
                 if (this.isHurt() ) {
@@ -148,18 +162,23 @@ class Character extends MovableObject {
             }
     }
 
-
-    deathAnimation(){
+/**
+ * @description Handles the death animation of the character.
+ * @memberof Character
+ */
+deathAnimation(){
             if (this.isDead() && !this.deathAnimationPlayed) {
             this.playAnimationOnce(this.IMAGES_DEAD);
             this.deathAnimationPlayed = true;
             gameLose = true;
-            return;
         }
     }
 
-
-    characterMovement(){
+/**
+ * @description Handles the character movement based on keyboard input.
+ * @memberof Character
+ */
+characterMovement(){
         setStoppableInterval(() => {
             this.characterMoveLeft();
             this.characterMoveRight();
@@ -168,24 +187,33 @@ class Character extends MovableObject {
         }, 50);
     }
 
-
-    characterMoveLeft(){
+/**
+ * @description Moves the character to the left if the left key is pressed.
+ * @memberof Character
+ */
+characterMoveLeft(){
         if (!this.isDead() && this.world.keyboard.LEFT && this.x > 0) {
         this.moveLeft()
         this.lastMoveTime = Date.now();
         }
     }
 
-
-    characterMoveRight(){
+/**
+ * @description Moves the character to the right if the right key is pressed.
+ * @memberof Character
+ */
+characterMoveRight(){
         if (!this.isDead() && this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight()
         this.lastMoveTime = Date.now();
         }
     }
 
-
-    characterJump(){
+/**
+ * @description Handles the jump action of the character.
+ * @memberof Character
+ */
+characterJump(){
         if (!this.isDead() && !this.isAboveGround() && (this.world.keyboard.SPACE || this.world.keyboard.UP)) {
         this.jumpSound.currentTime = 0;
         this.jumpSound.play();

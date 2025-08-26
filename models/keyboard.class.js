@@ -12,8 +12,11 @@ class Keyboard {
     this.bindKeyTouch();
 
     }
-
-    bindKeyPress(){ 
+/**
+ * @description Binds key press and key release events to update the keyboard state.
+ * @memberof Keyboard
+ */
+bindKeyPress(){ 
     document.addEventListener('keydown', (event) => {
     if (event.code === "Space") {
         keyboard.SPACE = true;
@@ -63,6 +66,11 @@ class Keyboard {
 });
 }
 
+
+/**
+ * @description Binds touch events for mobile controls.
+ * @memberof Keyboard
+ */
 bindKeyTouch(){
     document.getElementById('left_mobile').addEventListener('touchstart', (event) => {
         event.preventDefault();

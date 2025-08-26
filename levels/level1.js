@@ -5,6 +5,10 @@ let groundBottle = 'imgs/6_salsa_bottle/1_salsa_bottle_on_ground.png'
 let hoveringBottle = 'imgs/6_salsa_bottle/salsa_bottle.png'
 let level1;
 
+
+/**
+ * @description Initializes the level with enemies, background objects, clouds, throwable objects, and collectibles.
+ */
 function initLevel(){
 level1 = new Level(
     [

@@ -216,9 +216,9 @@ function openFullscreen(elem) {
 function closeFullscreen() {
   if (document.exitFullscreen) {
     document.exitFullscreen();
-  } else if (document.webkitExitFullscreen) { /* Safari */
+  } else if (document.webkitExitFullscreen) { 
     document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) { /* IE11 */
+  } else if (document.msExitFullscreen) { 
     document.msExitFullscreen();
   }
 }

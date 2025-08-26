@@ -22,7 +22,7 @@ height = 460;
  * @memberof Clouds
  */
 animate(){
-        this.movingLeft();
+        this.movingLeft(0.25);
     }
 
 

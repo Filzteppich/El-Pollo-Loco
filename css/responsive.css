@@ -2,7 +2,6 @@
     #canvas{
         width: 100vw;
         height: 100vh;
-        padding-top: 40px;
     }
 
     .mobile_hide{
@@ -31,7 +30,7 @@
     }
 
     .endscreen-content{
-        padding-bottom: 0;
+        padding-bottom: 20px;
     }
 }
 

@@ -11,9 +11,6 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
     gravityInterval;
     gameFinished = false;
-
-
-   
     
     clearIntervalAfterDeath = [];
     

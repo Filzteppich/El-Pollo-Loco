@@ -51,9 +51,9 @@ level1 = new Level(
     new BackgroundObject('imgs/5_background/layers/2_second_layer/2.png', 3700),
     new BackgroundObject('imgs/5_background/layers/1_first_layer/2.png', 3700),
     ],[
- new Clouds('imgs/5_background/layers/4_clouds/1.png', 0),
- new Clouds('imgs/5_background/layers/4_clouds/2.png', 740 + Math.random() * 740),
- new Clouds('imgs/5_background/layers/4_clouds/2.png', 1480 + Math.random() * 740),
+    new Clouds('imgs/5_background/layers/4_clouds/1.png', 0),
+    new Clouds('imgs/5_background/layers/4_clouds/2.png', 740 + Math.random() * 740),
+    new Clouds('imgs/5_background/layers/4_clouds/2.png', 1480 + Math.random() * 740),
     ],[
     new ThrowableObject(400, groundPosition,groundBottle),
     new ThrowableObject(500, groundPosition,groundBottle),

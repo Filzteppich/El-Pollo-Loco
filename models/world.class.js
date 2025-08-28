@@ -318,6 +318,7 @@ addToMap(object){
     if (object.otherDirection) {
         this.flipImageBack(object)
     }
+    this.drawOffsetFrameBorder(object)
 }
 
 

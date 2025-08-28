@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DrawableObject</title>
+    <title>JSDoc: Source: models/audio.class.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,411 +17,112 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DrawableObject</h1>
-
-    
-
-
-
-
-<section>
-
-<header>
-    
-        <h2><span class="attribs"><span class="type-signature"></span></span>DrawableObject<span class="signature">()</span><span class="type-signature"></span></h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-    
-
-    
-    <h4 class="name" id="DrawableObject"><span class="type-signature"></span>new DrawableObject<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_drawable-object.class.js.html">models/drawable-object.class.js</a>, <a href="models_drawable-object.class.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="loadImage"><span class="type-signature"></span>loadImage<span class="signature">(path)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Loads an image from the specified path and sets it as the current image.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">path of the image to load</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_drawable-object.class.js.html">models/drawable-object.class.js</a>, <a href="models_drawable-object.class.js.html#line18">line 18</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="loadImages"><span class="type-signature"></span>loadImages<span class="signature">(arr)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Loads multiple images from the specified array of paths.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>arr</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">array of image paths to load</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="models_drawable-object.class.js.html">models/drawable-object.class.js</a>, <a href="models_drawable-object.class.js.html#line29">line 29</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
-    
-</article>
-
-</section>
+    <h1 class="page-title">Source: models/audio.class.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+
+/**
+ * @description Handles audio playback for the game.
+ * @class Audio
+ */
+class Sound {
+
+ bounceSound = new Audio('audio/swoop_bound.wav');
+ throwSound = new Audio('audio/throw.wav');
+ splashSound = new Audio('audio/splash_sound.mp3');
+ chickenHurtSound = new Audio('audio/chicken_hurt_sound_.wav');
+ characterHurtSound = new Audio('audio/character_hurt.wav');
+ finalBossTheme = new Audio('audio/final_boss.wav');
+ coinSound = new Audio('audio/coin_sound.mp3');
+ bottleSound = new Audio('audio/bottle_collect.wav');
+ themeSong = new Audio('audio/theme_song.wav');
+ endbossSound = new Audio('audio/endboss_sound.wav');
+ endbossHurtSound = new Audio('audio/endboss_hurt.wav');
+ loseSound = new Audio('audio/lose_sound.mp3');
+ winSound = new Audio('audio/win_sound.wav');
+
+
+    constructor(){
+        this.setAudioVolume();  
+        this.playIntroSound();
+        this.collectSounds();
+        this.checkAudioBeforeStart();
+    }
+
+
+/**
+ * @description Collects all the sounds used in the game and registers them for global control.
+ * @memberof World
+ */
+collectSounds(){
+registerSounds(this.bounceSound);
+registerSounds(this.throwSound);
+registerSounds(this.splashSound);
+registerSounds(this.chickenHurtSound);
+registerSounds(this.characterHurtSound);
+registerSounds(this.finalBossTheme);
+registerSounds(this.coinSound);
+registerSounds(this.bottleSound);
+registerSounds(this.themeSong);
+registerSounds(this.endbossSound);
+registerSounds(this.endbossHurtSound);
+registerSounds(this.loseSound);
+registerSounds(this.winSound);
+}
+
+
+/**
+ * @description Checks if audio is muted before starting the game.
+ * @memberof World
+ */
+checkAudioBeforeStart(){
+    if (mute){
+        allSounds.forEach((sound) => {
+            sound.volume = 0;
+        })
+    }
+}
+
+
+/**
+ * @description Sets the audio volume for all game sounds.
+ * @memberof World
+ */
+setAudioVolume(){
+    this.bounceSound.volume = 1.0;
+    this.finalBossTheme.volume = 0.3;
+    this.themeSong.volume = 0.2;
+    this.endbossSound.volume = 0.2;
+    this.endbossHurtSound.volume = 0.2;
+    this.loseSound.volume = 0.6;
+}
+
+
+/**
+ * @description Plays the intro theme song and sets it to loop.
+ * @memberof World
+ */
+playIntroSound(){
+    this.themeSong.play();
+    this.themeSong.loop = true;
+}
+
+
+playAudio(audio){
+    audio.currentTime = 0;
+    audio.play();
+}
+
+}</code></pre>
+        </article>
+    </section>
 
 
 

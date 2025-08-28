@@ -33,7 +33,7 @@
 class Character extends MovableObject {
 
     x = 80
-    y =  130;    
+    y =  135;    
     height = 300;
     width = 120;
     img;
@@ -49,7 +49,7 @@ class Character extends MovableObject {
     offset = {
         top : 130,
         bottom : 15,
-        right : 15,
+        right : 25,
         left : 15,
     }
 
@@ -116,7 +116,12 @@ class Character extends MovableObject {
         'imgs/2_character_pepe/1_idle/long_idle/I-20.png',
     ]
 
-    constructor(name){
+
+/**
+ * @description Creates an instance of Character.
+ * @memberof Character
+ */
+constructor(){
         super()
         this.loadImages(this.IMAGES_WALK);
         this.loadImages(this.IMAGES_JUMPING);
@@ -124,12 +129,14 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_LONG_IDLE);
         this.loadImages(this.IMAGES_IDLE);
-        this.name = name;
         this.setAudioVolume();
         this.animate();
         this.applyGravity();
         this.characterMovement();
+        registerSounds(this.jumpSound);
+        registerSounds(this.longIdleSound);
     }
+
 
 /**
  * @description Sets the audio volume for jump and long idle sounds.
@@ -139,6 +146,7 @@ setAudioVolume(){
         this.jumpSound.volume = 0.3;
         this.longIdleSound.volume = 0.5;
     }
+
 
 /**
  * @description Handles the animation of the character including death, jump, walk, and idle animations.
@@ -154,6 +162,7 @@ animate(){
         setStoppableInterval(() => this.walkAnimation(), 50)
     }
 
+
 /**
  * @description Handles the jump animation of the character.
  * @memberof Character
@@ -164,6 +173,7 @@ jumpAnimation(){
         }
     }
 
+
 /**
  * @description Handles the walk animation of the character.
  * @memberof Character
@@ -173,6 +183,7 @@ walkAnimation(){
         this.playAnimation(this.IMAGES_WALK);
         }
     }
+
 
 /**
  * @description Checks the status of the character and updates animations accordingly.
@@ -194,6 +205,7 @@ checkCharacterStatus(){
             }
     }
 
+
 /**
  * @description Handles the death animation of the character.
  * @memberof Character
@@ -205,6 +217,7 @@ deathAnimation(){
             gameLose = true;
         }
     }
+
 
 /**
  * @description Handles the character movement based on keyboard input.
@@ -219,6 +232,7 @@ characterMovement(){
         }, 50);
     }
 
+
 /**
  * @description Moves the character to the left if the left key is pressed.
  * @memberof Character
@@ -230,6 +244,7 @@ characterMoveLeft(){
         }
     }
 
+
 /**
  * @description Moves the character to the right if the right key is pressed.
  * @memberof Character
@@ -240,6 +255,7 @@ characterMoveRight(){
         this.lastMoveTime = Date.now();
         }
     }
+
 
 /**
  * @description Handles the jump action of the character.
@@ -267,13 +283,13 @@ characterJump(){
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="CollectibleObject.html">CollectibleObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="Floor.html">Floor</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkLocalStorageSound">checkLocalStorageSound</a></li><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#closeFullscreen">closeFullscreen</a></li><li><a href="global.html#closeWindow">closeWindow</a></li><li><a href="global.html#endgame">endgame</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#loseDisplay">loseDisplay</a></li><li><a href="global.html#muted">muted</a></li><li><a href="global.html#openFullscreen">openFullscreen</a></li><li><a href="global.html#registerSounds">registerSounds</a></li><li><a href="global.html#resetWorld">resetWorld</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#returnToStartScreen">returnToStartScreen</a></li><li><a href="global.html#setStoppableInterval">setStoppableInterval</a></li><li><a href="global.html#showLoseScreen">showLoseScreen</a></li><li><a href="global.html#showWinScreen">showWinScreen</a></li><li><a href="global.html#showWindow">showWindow</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#stopGame">stopGame</a></li><li><a href="global.html#stopGameIntervals">stopGameIntervals</a></li><li><a href="global.html#stopSound">stopSound</a></li><li><a href="global.html#toggleFullscreen">toggleFullscreen</a></li><li><a href="global.html#toggleSound">toggleSound</a></li><li><a href="global.html#unmuted">unmuted</a></li><li><a href="global.html#winDisplay">winDisplay</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Audio.html">Audio</a></li><li><a href="BackgroundObject.html">BackgroundObject</a></li><li><a href="BackgroundObject.BackgroundObject.html">BackgroundObject</a></li><li><a href="Character.html">Character</a></li><li><a href="Character.Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Chicken.Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Clouds.Clouds.html">Clouds</a></li><li><a href="CollectibleObject.html">CollectibleObject</a></li><li><a href="CollectibleObject.CollectibleObject.html">CollectibleObject</a></li><li><a href="Collision.html">Collision</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="Endboss.Endboss.html">Endboss</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="Endscreen.Endscreen.html">Endscreen</a></li><li><a href="Floor.html">Floor</a></li><li><a href="Floor.Floor.html">Floor</a></li><li><a href="Keyboard.html">Keyboard</a></li><li><a href="Keyboard.Keyboard.html">Keyboard</a></li><li><a href="Level.html">Level</a></li><li><a href="Level.Level.html">Level</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="SmallChicken.html">SmallChicken</a></li><li><a href="SmallChicken.SmallChicken.html">SmallChicken</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="StatusBar.StatusBar.html">StatusBar</a></li><li><a href="ThrowableObject.html">ThrowableObject</a></li><li><a href="ThrowableObject.ThrowableObject.html">ThrowableObject</a></li><li><a href="World.html">World</a></li><li><a href="World.World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkLocalStorageSound">checkLocalStorageSound</a></li><li><a href="global.html#checkOrientation">checkOrientation</a></li><li><a href="global.html#closeFullscreen">closeFullscreen</a></li><li><a href="global.html#closeWindow">closeWindow</a></li><li><a href="global.html#endgame">endgame</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initLevel">initLevel</a></li><li><a href="global.html#loseDisplay">loseDisplay</a></li><li><a href="global.html#muted">muted</a></li><li><a href="global.html#openFullscreen">openFullscreen</a></li><li><a href="global.html#registerSounds">registerSounds</a></li><li><a href="global.html#resetWorld">resetWorld</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#returnToStartScreen">returnToStartScreen</a></li><li><a href="global.html#setStoppableInterval">setStoppableInterval</a></li><li><a href="global.html#showLoseScreen">showLoseScreen</a></li><li><a href="global.html#showWinScreen">showWinScreen</a></li><li><a href="global.html#showWindow">showWindow</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#stopGame">stopGame</a></li><li><a href="global.html#stopGameIntervals">stopGameIntervals</a></li><li><a href="global.html#stopSound">stopSound</a></li><li><a href="global.html#toggleFullscreen">toggleFullscreen</a></li><li><a href="global.html#toggleSound">toggleSound</a></li><li><a href="global.html#unmuted">unmuted</a></li><li><a href="global.html#winDisplay">winDisplay</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Aug 26 2025 19:12:33 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Aug 28 2025 14:55:46 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

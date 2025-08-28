@@ -5,7 +5,7 @@
 class Character extends MovableObject {
 
     x = 80
-    y =  130;    
+    y =  135;    
     height = 300;
     width = 120;
     img;
@@ -21,7 +21,7 @@ class Character extends MovableObject {
     offset = {
         top : 130,
         bottom : 15,
-        right : 15,
+        right : 35,
         left : 15,
     }
 
@@ -88,7 +88,12 @@ class Character extends MovableObject {
         'imgs/2_character_pepe/1_idle/long_idle/I-20.png',
     ]
 
-    constructor(name){
+
+/**
+ * @description Creates an instance of Character.
+ * @memberof Character
+ */
+constructor(){
         super()
         this.loadImages(this.IMAGES_WALK);
         this.loadImages(this.IMAGES_JUMPING);
@@ -96,12 +101,14 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_LONG_IDLE);
         this.loadImages(this.IMAGES_IDLE);
-        this.name = name;
         this.setAudioVolume();
         this.animate();
         this.applyGravity();
         this.characterMovement();
+        registerSounds(this.jumpSound);
+        registerSounds(this.longIdleSound);
     }
+
 
 /**
  * @description Sets the audio volume for jump and long idle sounds.
@@ -111,6 +118,7 @@ setAudioVolume(){
         this.jumpSound.volume = 0.3;
         this.longIdleSound.volume = 0.5;
     }
+
 
 /**
  * @description Handles the animation of the character including death, jump, walk, and idle animations.
@@ -126,6 +134,7 @@ animate(){
         setStoppableInterval(() => this.walkAnimation(), 50)
     }
 
+
 /**
  * @description Handles the jump animation of the character.
  * @memberof Character
@@ -136,6 +145,7 @@ jumpAnimation(){
         }
     }
 
+
 /**
  * @description Handles the walk animation of the character.
  * @memberof Character
@@ -145,6 +155,7 @@ walkAnimation(){
         this.playAnimation(this.IMAGES_WALK);
         }
     }
+
 
 /**
  * @description Checks the status of the character and updates animations accordingly.
@@ -166,6 +177,7 @@ checkCharacterStatus(){
             }
     }
 
+
 /**
  * @description Handles the death animation of the character.
  * @memberof Character
@@ -177,6 +189,7 @@ deathAnimation(){
             gameLose = true;
         }
     }
+
 
 /**
  * @description Handles the character movement based on keyboard input.
@@ -191,6 +204,7 @@ characterMovement(){
         }, 50);
     }
 
+
 /**
  * @description Moves the character to the left if the left key is pressed.
  * @memberof Character
@@ -202,6 +216,7 @@ characterMoveLeft(){
         }
     }
 
+
 /**
  * @description Moves the character to the right if the right key is pressed.
  * @memberof Character
@@ -212,6 +227,7 @@ characterMoveRight(){
         this.lastMoveTime = Date.now();
         }
     }
+
 
 /**
  * @description Handles the jump action of the character.

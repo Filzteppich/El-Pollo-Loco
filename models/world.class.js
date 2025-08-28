@@ -10,110 +10,42 @@ camera_x;
 moveLeftAnimation;
 level;
 endgameInterval;
-character = new Character("Pepe");
+character = new Character();
 drawableObject = new DrawableObject();
 healthbar = new StatusBar('health', 10, 10);
 coinbar = new StatusBar('coin', 220, 10);
 bottlesbar = new StatusBar('bottle', 430, 10)
 enemyStatusbar = new StatusBar('endboss', 430, 50)
+audio = new Sound();
 enemyStatusbarVisible = false;
 throwCooldown =  false;
 endscreen = null;
+collision = new Collision(this);
 
- bounceSound = new Audio('audio/swoop_bound.wav');
- throwSound = new Audio('audio/throw.wav');
- splashSound = new Audio('audio/splash_sound.mp3');
- chickenHurtSound = new Audio('audio/chicken_hurt_sound_.wav');
- characterHurtSound = new Audio('audio/character_hurt.wav');
- finalBossTheme = new Audio('audio/final_boss.wav');
- coinSound = new Audio('audio/coin_sound.mp3');
- bottleSound = new Audio('audio/bottle_collect.wav');
- themeSong = new Audio('audio/theme_song.wav');
- endbossSound = new Audio('audio/endboss_sound.wav');
- endbossHurtSound = new Audio('audio/endboss_hurt.wav');
- loseSound = new Audio('audio/lose_sound.mp3');
 
 collectedBottles = [];
 collectedCoins = [];
 thrownObjects=[];
 
 
-    constructor(canvas, keyboard){
-        this.ctx = canvas.getContext('2d');
-        this.canvas = canvas;
-        this.keyboard = keyboard;
-        this.setAudioVolume();
-        initLevel()
-        this.level = level1;
-        this.draw();
-        this.setWorld();
-        this.run();
-        this.bottlesbar.setPercentage(this.collectedBottles.length * 10, this.bottlesbar.BOTTLE_IMAGES)
-        this.coinbar.setPercentage(this.collectedCoins.length * 10, this.coinbar.COIN_IMAGES)
-        this.playIntroSound();
-        this.collectSounds();
-        this.checkAudioBeforeStart();
-    }
-
-
-    /**
-     * @description Collects all the sounds used in the game and registers them for global control.
-     * @memberof World
-     */
-    collectSounds(){
-    registerSounds(this.bounceSound);
-    registerSounds(this.throwSound);
-    registerSounds(this.splashSound);
-    registerSounds(this.chickenHurtSound);
-    registerSounds(this.characterHurtSound);
-    registerSounds(this.finalBossTheme);
-    registerSounds(this.coinSound);
-    registerSounds(this.bottleSound);
-    registerSounds(this.themeSong);
-    registerSounds(this.endbossSound);
-    registerSounds(this.endbossHurtSound);
-    registerSounds(this.character.jumpSound);
-    registerSounds(this.character.longIdleSound);
-    registerSounds(this.loseSound);
-    registerSounds(this.level.enemies.forEach((chicken) =>{
-    registerSounds(chicken.chickensound);
-    }))
-}
-
 /**
- * @description Checks if audio is muted before starting the game.
+ * Creates an instance of World.
+ * @param {*} canvas the canvas element
+ * @param {*} keyboard the keyboard object
  * @memberof World
  */
-checkAudioBeforeStart(){
-    if (mute){
-        allSounds.forEach((sound) => {
-            sound.volume = 0;
-        })
-    }
-}
+constructor(canvas, keyboard){
+    this.ctx = canvas.getContext('2d');
+    this.canvas = canvas;
+    this.keyboard = keyboard;
+    initLevel()
+    this.level = level1;
+    this.draw();
+    this.setWorld();
+    this.run();
+    this.bottlesbar.setPercentage(this.collectedBottles.length * 10, this.bottlesbar.BOTTLE_IMAGES)
+    this.coinbar.setPercentage(this.collectedCoins.length * 10, this.coinbar.COIN_IMAGES)
 
-
-/**
- * @description Sets the audio volume for all game sounds.
- * @memberof World
- */
-setAudioVolume(){
-    this.bounceSound.volume = 1.0;
-    this.finalBossTheme.volume = 0.3;
-    this.themeSong.volume = 0.2;
-    this.endbossSound.volume = 0.2;
-    this.endbossHurtSound.volume = 0.2;
-    this.loseSound.volume = 0.6;
-}
-
-
-/**
- * @description Plays the intro theme song and sets it to loop.
- * @memberof World
- */
-playIntroSound(){
-    this.themeSong.play();
-    this.themeSong.loop = true;
 }
 
 
@@ -125,19 +57,20 @@ setWorld(){
     this.character.world = this;
 }
 
+
 /**
  * @description Starts the main game loop, checking for various game events and updating the game state.
  * @memberof World
  */
 run(){
-    setStoppableInterval(() => this.jumpOnEnemy(), 10);
+    setStoppableInterval(() => this.collision.jumpOnEnemy(), 10);
+    setStoppableInterval(() => this.collision.checkCollisions(), 200);
+    setStoppableInterval(() => this.collision.checkEnemyAttack(), 100);
+    setStoppableInterval(() => this.collision.checkBottleCollision(), 100);
+    setStoppableInterval(() => this.collision.checkCoinCollision(), 100);
+    setStoppableInterval(() => this.checkThrowObjects(), 100);
     setStoppableInterval(() => this.EndbossAttack(), 10);
     this.endgameInterval = setStoppableInterval(() => this.checkEndgame(), 500);
-    setStoppableInterval(() => this.checkCollisions(), 200);
-    setStoppableInterval(() => this.checkEnemyAttack(), 100);
-    setStoppableInterval(() => this.checkBottleCollision(), 100);
-    setStoppableInterval(() => this.checkCoinCollision(), 100);
-    setStoppableInterval(() => this.checkThrowObjects(), 100);
 }
 
 
@@ -169,11 +102,11 @@ EndbossAttack(){
  */
 endbossEntry(enemy){
     if (!enemy.moveInterval) {
-        enemy.movingLeft(1.5);
-        this.themeSong.pause();
-        this.finalBossTheme.play();
-        this.endbossSound.play();
-        this.endbossSound.loop = true;
+        enemy.movingLeft(4.5);
+        this.audio.themeSong.pause();
+        this.audio.finalBossTheme.play();
+        this.audio.endbossSound.play();
+        this.audio.endbossSound.loop = true;
     }
         enemy.checkIfDead();
     }
@@ -191,6 +124,7 @@ checkEndgame(){
     }
 }
 
+
 /**
  * @description Displays the win screen and stops game intervals.
  * @memberof World
@@ -200,10 +134,12 @@ showWinScreen(){
     this.endscreen = new Endscreen('win');   
     setTimeout(() => stopGameIntervals(), 1500);
     setTimeout(() => endgame('win'), 2000);
+    this.audio.winSound.play();
     }, 500);
     clearInterval(this.endgameInterval);
     this.endgameInterval = null;
 }
+
 
 /**
  * @description Displays the lose screen and stops game intervals.
@@ -213,12 +149,14 @@ showLoseScreen(){
     setTimeout(() => {
     this.endscreen = new Endscreen('lose');
     stopGame();
-    this.loseSound.play();
+    this.audio.loseSound.play();
     endgame('lose');
     }, 1500);
     clearInterval(this.endgameInterval);
     this.endgameInterval = null;
 }
+
+
 /**
  * @description Checks if the player is attempting to throw an object and handles the throwing logic.
  * @memberof World
@@ -245,62 +183,16 @@ throwBottle(){
     if (bottle.otherDirection) {
         bottle.throw(this.character.x - 100 + this.character.width / 2, this.character.y + this.character.height / 2)
         this.throwCooldown = true;
-        this.throwSound.play()
+        this.audio.throwSound.play()
     }else{
         bottle.throw(this.character.x + this.character.width / 2, this.character.y + this.character.height / 2)
         this.throwCooldown = true;
-        this.throwSound.play()
+        this.audio.throwSound.play()
     }
     this.thrownObjects.push(bottle);
 }
 
 
-/**
- * @description Checks for collisions between the character and enemies.
- * @memberof World
- */
-checkCollisions(){
-    this.level.enemies.forEach((enemy) => {
-    if(this.character.isColliding(enemy) && !this.character.isDead() && !this.character.isCollidingFromTop(enemy) && !enemy.isDead() && !isPaused && isGameRunning){
-        this.character.hit(5);
-        this.characterHurtSound.play();
-        this.healthbar.setPercentage(this.character.characterHealth, this.healthbar.HEALTHBAR_IMAGES);
-        }
-    })
-}
-
-
-/**
- * @description Handles the character jumping on an enemy.
- * @memberof World
- */
-jumpOnEnemy(){
-    this.level.enemies.forEach((enemy) => {
-        if (this.character.isCollidingFromTop(enemy) && !enemy.isDead() && enemy instanceof Chicken) {
-        this.character.jump();
-        enemy.hit(100)
-        enemy.checkIfDead();
-        this.bounceSound.currentTime = 0
-        this.bounceSound.play();
-        }
-    });
-}
-
-/**
- * @description Checks if bottles are colliding with enemies and handles the attack logic.
- * @memberof World
- */
-checkEnemyAttack(){
-    this.level.enemies.forEach((enemy) => {
-        this.thrownObjects.forEach((bottle) => {
-            if (bottle.isColliding(enemy) && enemy instanceof Chicken && !enemy.isDead()) {
-                this.chickenHit(bottle, enemy)
-            }else if (bottle.isColliding(enemy) && enemy instanceof Endboss && !enemy.isDead() && !enemy.isHurt()){
-                this.endbossHit(bottle, enemy)
-            }
-        })
-    })
-}
 /**
  * @description Handles the attack logic when a bottle hits a chicken enemy.
  * @param {*} bottle the bottle object
@@ -311,9 +203,10 @@ chickenHit(bottle, enemy){
     enemy.hit(100);
     this.bottleSplash(bottle);
     enemy.checkIfDead()
-    this.splashSound.currentTime = 0;
-    this.playAudio(this.splashSound)
-    this.playAudio(this.chickenHurtSound)
+    this.audio.splashSound.currentTime = 0;
+    this.audio.splashSound.play();
+    this.audio.chickenHurtSound.currentTime = 0;
+    this.audio.chickenHurtSound.play();
 }
 
 
@@ -324,25 +217,14 @@ chickenHit(bottle, enemy){
  * @memberof World
  */
 endbossHit(bottle, enemy){
-    enemy.hit(25);
+    enemy.hit(20);
     this.bottleSplash(bottle);
     this.enemyStatusbar.setPercentage(enemy.characterHealth, this.enemyStatusbar.ENDBOSS_STATUSBAR_IMAGES)
-    enemy.checkIfDead(this.finalBossTheme, this.themeSong, this.endbossSound)
-    this.splashSound.currentTime = 0;
-    this.splashSound.play();
-    this.endbossHurtSound.currentTime = 0;
-    this.endbossHurtSound.play();
-}
-
-
-/**
- * @description Plays the specified audio.
- * @param {*} audio the audio object
- * @memberof World
- */
-playAudio(audio){
-    audio.currentTime = 0;
-    audio.play();
+    enemy.checkIfDead(this.audio.finalBossTheme, this.audio.themeSong, this.audio.endbossSound)
+    this.audio.splashSound.currentTime = 0;
+    this.audio.splashSound.play();
+    this.audio.endbossHurtSound.currentTime = 0;
+    this.audio.endbossHurtSound.play();
 }
 
 
@@ -380,44 +262,12 @@ clearBottleIntervals(bottle){
 
 
 /**
- * @description Checks for collisions between the character and bottles, updating the collected bottles and status bar accordingly.
- * @memberof World
- */
-checkBottleCollision(){
-        this.level.bottles.forEach((bottle) => {
-            if (this.character.isColliding(bottle)) {
-                let removedBottle = this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1)[0];
-                this.collectedBottles.push(removedBottle);
-                this.bottlesbar.setPercentage(this.collectedBottles.length * 10, this.bottlesbar.BOTTLE_IMAGES)
-                this.bottleSound.currentTime = 0;
-                this.bottleSound.play();
-            }
-        })
-}
-
-
-/**
- * @description Checks for collisions between the character and coins, updating the collected coins and status bar accordingly.
- * @memberof World
- */
-checkCoinCollision(){
-    this.level.coins.forEach((coin) => {
-        if (this.character.isColliding(coin)){
-            let removedCoin = this.level.coins.splice(this.level.coins.indexOf(coin), 1)[0];
-            this.collectedCoins.push(removedCoin);
-            this.coinbar.setPercentage(this.collectedCoins.length * 10, this.coinbar.COIN_IMAGES);
-            this.coinSound.currentTime = 0;
-            this.coinSound.play();
-        }
-    })
-}
-
-/**
  * @description Draws the entire game world, including background, characters, enemies, and UI elements.
  * @memberof World
  */
 draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObject)
     this.addObjectsToMap(this.level.clouds);
@@ -427,6 +277,7 @@ draw() {
     this.addObjectsToMap(this.thrownObjects);
     this.addToMap(this.character);
     this.ctx.translate(-this.camera_x, 0);
+
     this.addToMap(this.healthbar);
     this.addToMap(this.coinbar);
     this.addToMap(this.bottlesbar);
@@ -469,6 +320,7 @@ addToMap(object){
     }
 }
 
+
 /**
  * @description Flips the image of an object horizontally.
  * @param {*} object the object to flip
@@ -481,6 +333,7 @@ flipImage(object){
     object.x = -object.x;
 }
 
+
 /**
  * @description Flips the image of an object back to its original orientation.
  * @param {*} object the object to flip back
@@ -490,6 +343,7 @@ flipImageBack(object){
     object.x = -object.x;
     this.ctx.restore();
 }
+
 
 /**
  * @description Draws a frame border around the object for debugging purposes.

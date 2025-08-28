@@ -282,7 +282,7 @@ function unmuted(soundElement){
         allSounds.forEach((sound) => {
             if (world) {
                 sound.volume = 1;
-                world.setAudioVolume();
+                world.audio.setAudioVolume();
                 world.character.setAudioVolume();
             }
         })
@@ -298,7 +298,6 @@ function muted(soundElement){
     mute = true
     soundElement.src = 'imgs/icons/mute.png' 
     allSounds.forEach((sound) => {
-    sound.mute();
     sound.volume = 0;
     });
     localStorage.setItem('mute', mute);

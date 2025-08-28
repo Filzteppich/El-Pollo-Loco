@@ -10,12 +10,18 @@ class Keyboard {
     D = false;
     Numpad0 = false;
 
-    constructor(){
+    
+/**
+ * Creates an instance of Keyboard.
+ * @memberof Keyboard
+ */
+constructor(){
     this.bindKeyPress();
     this.bindKeyTouch();
-
     }
-/**
+
+
+    /**
  * @description Binds key press and key release events to update the keyboard state.
  * @memberof Keyboard
  */

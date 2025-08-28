@@ -17,10 +17,14 @@ class SmallChicken extends Chicken {
         'imgs/3_enemies_chicken/chicken_small/1_walk/3_w.png',
     ]
 
+    /**
+     * Creates an instance of SmallChicken.
+     * @memberof SmallChicken
+     */
     constructor(){
         super();
         this.loadImages(this.IMAGES_WALK)
         this.animate(1.5)
-
     }
+    
 }

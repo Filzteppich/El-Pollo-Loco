@@ -9,7 +9,14 @@ class BackgroundObject extends MovableObject{
     width = 740;
     height = 480;
 
-    constructor(imgPath, x){
+    
+/**
+ * Creates an instance of BackgroundObject.
+ * @param {*} imgPath the image path
+ * @param {*} x the x position of the image
+ * @memberof BackgroundObject
+ */
+constructor(imgPath, x){
         super()
         this.loadImage(imgPath)
         this.x = x;

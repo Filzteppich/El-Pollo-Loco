@@ -11,12 +11,19 @@ height = 460;
 
 
 
-
-    constructor(path, x){
+/**
+ * @description Creates an instance of Clouds.
+ * @param {*} path the image path of the cloud.
+ * @param {*} x the x position of the cloud
+ * @memberof Clouds
+ */
+constructor(path, x){
         super().loadImage(path)
         this.x = x;
         this.animate();
     }
+
+    
 /**
  * @description Animates the clouds by moving them to the left.
  * @memberof Clouds

@@ -166,6 +166,7 @@ canvas {
 .settings_icon:hover{
     cursor: pointer;
 }
+
 .settings_icon{
     height: 32px;
 }
@@ -195,6 +196,10 @@ position: absolute;
     justify-content: center;
     background: blue;
     transform: scale(1);
+}
+
+.relative:fullscreen .settings_icon{
+    filter: invert(100%);
 }
 
 .relative:fullscreen .settings_icon_container{
@@ -290,3 +295,4 @@ position: absolute;
 .mobile_hide{
     display: none;
 }
+

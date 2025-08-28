@@ -11,15 +11,14 @@ class Chicken  extends MovableObject {
     animationInterval;
     moveInterval;
     soundInterval;
-    
 
     chickensound = new Audio('audio/chicken_normal_sound.wav')
 
-        offset = {
-        top : 10,
-        bottom : 10,
-        left : 5,
-        right : 15,
+    offset = {
+    top : 10,
+    bottom : 10,
+    left : 5,
+    right : 15,
     }
 
     IMAGES_WALK =[
@@ -28,20 +27,26 @@ class Chicken  extends MovableObject {
         'imgs/3_enemies_chicken/chicken_normal/1_walk/3_w.png',
     ]
 
-    constructor() {
-        super()
-        this.loadImage('imgs/3_enemies_chicken/chicken_normal/1_walk/1_w.png')
-        this.loadImage('imgs/3_enemies_chicken/chicken_normal/2_dead/dead.png')
-        this.loadImages(this.IMAGES_WALK)
-        this.animate(0.5 + Math.random() * 1.0);
-        this.applyGravity();
 
-        this.soundInterval = setInterval(() => {
-            this.playChickenSound();
-        }, 3000 + Math.random() * 3000);
-        registerSounds(this.chickenSound)
-        allIntervals.push(this.soundInterval);        
+/**
+ * Creates an instance of Chicken.
+ * @memberof Chicken
+ */
+constructor() {
+    super()
+    this.loadImage('imgs/3_enemies_chicken/chicken_normal/1_walk/1_w.png')
+    this.loadImage('imgs/3_enemies_chicken/chicken_normal/2_dead/dead.png')
+    this.loadImages(this.IMAGES_WALK)
+    this.animate(0.5 + Math.random() * 1.0);
+
+    this.soundInterval = setInterval(() => {
+        this.playChickenSound();
+    }, 3000 + Math.random() * 3000);
+    registerSounds(this.chickenSound)
+    allIntervals.push(this.soundInterval);        
     }
+
+
 /**
  * @description Animates the chicken by moving it left and playing the walking animation.
  * @param {*} speed speed of the chicken depending on the enemy type
@@ -57,6 +62,7 @@ animate(speed){
             allIntervals.push(this.animationInterval)
         }
     }
+
 
 /**
  * @description Checks if the chicken is dead and handles the death animation and sound.
@@ -74,6 +80,8 @@ checkIfDead(){
                 clearInterval(this.soundInterval)
             }
     }
+
+
 /**
  * @description Plays the chicken sound at a set volume, considering the mute setting.
  * @memberof Chicken

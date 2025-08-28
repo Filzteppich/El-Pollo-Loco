@@ -41,21 +41,30 @@ class StatusBar extends DrawableObject{
         'imgs/7_statusbars/2_statusbar_endboss/orange/orange100.png',
     ]
 
-    
-    collectedCoins = 0;
 
-    percentage = 100;
-    bottleCount = 0;
-    y;
-    constructor(type, x, y){
-        super();
-        this.x = x;
-        this.y = y;
-        this.width = 200;
-        this.height = 50;
-        this.checkType(type)
-        this.loadImages(this.images);
-    }
+collectedCoins = 0;
+
+percentage = 100;
+bottleCount = 0;
+y;
+
+
+/**
+ * Creates an instance of StatusBar.
+ * @param {*} type the type of status bar (health, coin, bottle, endboss)
+ * @param {*} x the x position of the status bar
+ * @param {*} y the y position of the status bar
+ * @memberof StatusBar
+ */
+constructor(type, x, y){
+    super();
+    this.x = x;
+    this.y = y;
+    this.width = 200;
+    this.height = 50;
+    this.checkType(type)
+    this.loadImages(this.images);
+}
 
 
 /**
@@ -98,7 +107,7 @@ setPercentage(percentage, statusBarType){
  * @memberof StatusBar
  */
 resolveImageIndex(){
-        if (this.percentage == 100) {
+        if (this.percentage >= 100) {
             return 5
         }else if(this.percentage >= 80){
             return 4;

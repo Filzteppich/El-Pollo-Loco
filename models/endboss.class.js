@@ -10,15 +10,12 @@ class Endboss extends MovableObject {
     speed = 0.25;
     interval;
    
-    
-
         offset = {
         top : 70,
         bottom : 20,
-        left : 20,
+        left : 35,
         right : 50,
     }
-
 
     IMAGES_ATTACK = [
         'imgs/4_enemie_boss_chicken/3_attack/G13.png',
@@ -55,7 +52,11 @@ class Endboss extends MovableObject {
     ]
 
 
-    constructor() {
+/**
+ * Creates an instance of Endboss.
+ * @memberof Endboss
+ */
+constructor() {
         super()
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_ATTACK);
@@ -64,6 +65,8 @@ class Endboss extends MovableObject {
         this.animate();
         this.speed = 0.15 + Math.random() * 0.25;
     }
+
+
 /**
  * @description Animates the endboss by playing the appropriate animation based on its state.
  * @memberof Endboss
@@ -77,7 +80,6 @@ animate(){
     }}, 200)
     allIntervals.push(this.animateInterval)
 }
-
 
 
 /**
@@ -98,6 +100,8 @@ checkIfDead(enemyTheme, gameTheme, endbossSound){
         gameFinished = true;
     }
 }
+
+
 /**
  * @description Checks if the endboss is dead and plays the death animation only one time.
  * @param {*} enemyTheme theme of the enemy
@@ -119,6 +123,7 @@ stopDeathAnimationLoop(enemyTheme, gameTheme, endbossSound){
     this.clearIntervalAfterDeath.push(this.interval);
     allIntervals.push(this.interval);
 }
+
 
 /**
  * @description updates the endboss state and plays the appropriate animation and sounds.

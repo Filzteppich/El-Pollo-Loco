@@ -29,11 +29,19 @@ rotationInterval;
 offset = {
     top: 10,
     bottom: 10,
-    left: 30,
-    right: 30,
+    left: 40,
+    right: 40,
 }
 
-    constructor(x, y, img){
+
+/**
+ * Creates an instance of ThrowableObject.
+ * @param {*} x the x position of the object
+ * @param {*} y the y position of the object
+ * @param {*} img the image of the object
+ * @memberof ThrowableObject
+ */
+constructor(x, y, img){
         super();
         this.loadImages(this.SPLASHING_BOTTLE_IMAGES);
         this.loadImages(this.ROTATING_BOTTLE_IMAGES);

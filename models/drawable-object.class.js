@@ -10,11 +10,6 @@ class DrawableObject {
     otherDirection = false;
     
 
-    constructor(){
-      
-}
-
-
 /**
  * @description Loads an image from the specified path and sets it as the current image.
  * @param {*} path path of the image to load

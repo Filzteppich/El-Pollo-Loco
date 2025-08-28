@@ -5,7 +5,11 @@
 class Endscreen extends DrawableObject{
     
     
-    
+    /**
+     * Creates an instance of Endscreen.
+     * @param {*} type displays type of the endscreen depending on (win/lose)
+     * @memberof Endscreen
+     */
     constructor(type){
         super();
         if (type === 'win'){
@@ -21,11 +25,6 @@ class Endscreen extends DrawableObject{
             this.x = 0;
             this.y = 0;
         }
-
     }
-
-
-
-
 
 }
